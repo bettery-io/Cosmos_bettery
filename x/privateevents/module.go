@@ -114,7 +114,7 @@ func (AppModule) QuerierRoute() string {
 
 // NewQuerierHandler returns the privateevents module sdk.Querier.
 func (am AppModule) NewQuerierHandler() sdk.Querier {
-	return types.NewQuerier(am.keeper)
+	return NewQuerier(am.keeper)
 }
 
 // InitGenesis performs genesis initialization for the privateevents module. It returns

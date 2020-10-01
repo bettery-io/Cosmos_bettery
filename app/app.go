@@ -242,6 +242,12 @@ func NewInitApp(
 		app.subspaces[crisis.ModuleName], invCheckPeriod, app.supplyKeeper, auth.FeeCollectorName,
 	)
 
+	// app.privateEventKeeper = privateevents.NewKeeper(
+	// 	app.bankKeeper,
+	// 	app.cdc,
+	// 	keys[privateevents.StoreKey],
+	// )
+
 	app.upgradeKeeper = upgrade.NewKeeper(skipUpgradeHeights, keys[upgrade.StoreKey], app.cdc)
 
 	// create evidence keeper with evidence router
@@ -277,12 +283,6 @@ func NewInitApp(
 
 	// TODO: Add your module(s) keepers
 
-	app.privateEventKeeper = privateevents.NewKeeper(
-		app.BankKeeper,
-		app.cdc,
-		keys[privateevents.StoreKey],
-	)
-
 	// NOTE: Any module instantiated in the module manager that is later modified
 	// must be passed by reference here.
 	app.mm = module.NewManager(
@@ -299,7 +299,7 @@ func NewInitApp(
 		staking.NewAppModule(app.stakingKeeper, app.accountKeeper, app.supplyKeeper),
 		upgrade.NewAppModule(app.upgradeKeeper),
 		evidence.NewAppModule(app.evidenceKeeper),
-		privateEventKeeper.NewAppModule(app.privateEventKeeper, app.BankKeeper),
+		privateevents.NewAppModule(app.privateEventKeeper, app.bankKeeper),
 	)
 	// During begin block slashing happens after distr.BeginBlocker so that
 	// there is nothing left over in the validator fee pool, so as to keep the

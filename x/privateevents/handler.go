@@ -3,6 +3,7 @@ package privateevents
 import (
 	"fmt"
 
+	"github.com/VoroshilovMax/Bettery/x/privateevents/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -25,7 +26,7 @@ func NewHandler(k Keeper) sdk.Handler {
 }
 
 // handle<Action> does x
-func handleMsg(ctx sdk.Context, k Keeper, msg Msg) (*sdk.Result, error) {
+func handleMsg(ctx sdk.Context, k Keeper) (*sdk.Result, error) {
 	// err := k.<Action>(ctx, msg.ValidatorAddr)
 	// if err != nil {
 	// 	return nil, err
@@ -35,8 +36,8 @@ func handleMsg(ctx sdk.Context, k Keeper, msg Msg) (*sdk.Result, error) {
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			sdk.EventTypeMessage,
-			sdk.NewAttribute(sdk.AttributeKeyModule, AttributeValueCategory),
-			sdk.NewAttribute(sdk.AttributeKeySender, msg.ValidatorAddr.String()),
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		//	sdk.NewAttribute(sdk.AttributeKeySender, msg.ValidatorAddr.String()),
 		),
 	)
 

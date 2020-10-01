@@ -1,12 +1,10 @@
 package keeper
-/*
+
 // TODO: Define if your module needs Parameters, if not this can be deleted
 
 import (
-	"time"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/VoroshilovMax/Bettery/x/privateevents/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // GetParams returns the total set of privateevents parameters.
@@ -19,4 +17,3 @@ func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
 func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
 	k.paramspace.SetParamSet(ctx, &params)
 }
-*/
