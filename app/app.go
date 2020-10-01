@@ -5,12 +5,12 @@ import (
 	"io"
 	"os"
 
+	"github.com/VoroshilovMax/Bettery/x/privateevents"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/VoroshilovMax/Bettery/x/privateevents"
 	bam "github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/simapp"
@@ -20,19 +20,12 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth"
 	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
 	"github.com/cosmos/cosmos-sdk/x/bank"
-	"github.com/cosmos/cosmos-sdk/x/crisis"
 	distr "github.com/cosmos/cosmos-sdk/x/distribution"
-	"github.com/cosmos/cosmos-sdk/x/evidence"
 	"github.com/cosmos/cosmos-sdk/x/genutil"
-	"github.com/cosmos/cosmos-sdk/x/gov"
-	"github.com/cosmos/cosmos-sdk/x/mint"
 	"github.com/cosmos/cosmos-sdk/x/params"
-	paramsclient "github.com/cosmos/cosmos-sdk/x/params/client"
 	"github.com/cosmos/cosmos-sdk/x/slashing"
 	"github.com/cosmos/cosmos-sdk/x/staking"
 	"github.com/cosmos/cosmos-sdk/x/supply"
-	"github.com/cosmos/cosmos-sdk/x/upgrade"
-	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 )
 
 const appName = "app"
@@ -41,12 +34,12 @@ var (
 	// TODO: rename your cli
 
 	// DefaultCLIHome default home directories for the application CLI
-	DefaultCLIHome = os.ExpandEnv("$HOME/.batterycli")
+	DefaultCLIHome = os.ExpandEnv("$HOME/.betterycli")
 
 	// TODO: rename your daemon
 
 	// DefaultNodeHome sets the folder where the application data and configuration will be stored
-	DefaultNodeHome = os.ExpandEnv("$HOME/.batteryd")
+	DefaultNodeHome = os.ExpandEnv("$HOME/.betteryd")
 
 	// ModuleBasics The module BasicManager is in charge of setting up basic,
 	// non-dependant module elements, such as codec registration
@@ -56,15 +49,10 @@ var (
 		auth.AppModuleBasic{},
 		bank.AppModuleBasic{},
 		staking.AppModuleBasic{},
-		mint.AppModuleBasic{},
 		distr.AppModuleBasic{},
-		gov.NewAppModuleBasic(paramsclient.ProposalHandler, distr.ProposalHandler, upgradeclient.ProposalHandler),
 		params.AppModuleBasic{},
-		crisis.AppModuleBasic{},
 		slashing.AppModuleBasic{},
 		supply.AppModuleBasic{},
-		upgrade.AppModuleBasic{},
-		evidence.AppModuleBasic{},
 		// TODO: Add your module(s) AppModuleBasic
 		privateevents.AppModuleBasic{},
 	)
@@ -73,10 +61,8 @@ var (
 	maccPerms = map[string][]string{
 		auth.FeeCollectorName:     nil,
 		distr.ModuleName:          nil,
-		mint.ModuleName:           {supply.Minter},
 		staking.BondedPoolName:    {supply.Burner, supply.Staking},
 		staking.NotBondedPoolName: {supply.Burner, supply.Staking},
-		gov.ModuleName:            {supply.Burner},
 	}
 )
 
@@ -110,18 +96,12 @@ type NewApp struct {
 	// keepers
 	accountKeeper  auth.AccountKeeper
 	bankKeeper     bank.Keeper
-	supplyKeeper   supply.Keeper
 	stakingKeeper  staking.Keeper
 	slashingKeeper slashing.Keeper
-	mintKeeper     mint.Keeper
 	distrKeeper    distr.Keeper
-	govKeeper      gov.Keeper
-	crisisKeeper   crisis.Keeper
+	supplyKeeper   supply.Keeper
 	paramsKeeper   params.Keeper
-	upgradeKeeper  upgrade.Keeper
-	evidenceKeeper evidence.Keeper
 	// TODO: Add your module(s)
-
 	privateEventKeeper privateevents.Keeper
 
 	// Module Manager
@@ -137,7 +117,7 @@ var _ simapp.App = (*NewApp)(nil)
 // NewBetteryApp is a constructor function for BetteryApp
 func NewInitApp(
 	logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest bool,
-	invCheckPeriod uint, skipUpgradeHeights map[int64]bool, baseAppOptions ...func(*bam.BaseApp),
+	invCheckPeriod uint, baseAppOptions ...func(*bam.BaseApp),
 ) *NewApp {
 	// First define the top level codec that will be shared by the different modules
 	cdc := MakeCodec()
@@ -148,12 +128,11 @@ func NewInitApp(
 	bApp.SetAppVersion(version.Version)
 
 	// TODO: Add the keys that module requires
-	keys := sdk.NewKVStoreKeys(
-		bam.MainStoreKey, auth.StoreKey, staking.StoreKey,
-		supply.StoreKey, mint.StoreKey, distr.StoreKey, slashing.StoreKey,
-		gov.StoreKey, params.StoreKey, evidence.StoreKey, upgrade.StoreKey,
+	keys := sdk.NewKVStoreKeys(bam.MainStoreKey, auth.StoreKey, staking.StoreKey,
+		supply.StoreKey, distr.StoreKey, slashing.StoreKey, params.StoreKey,
 		privateevents.StoreKey,
 	)
+
 	tKeys := sdk.NewTransientStoreKeys(staking.TStoreKey, params.TStoreKey)
 
 	// Here you initialize your application with the store keys it requires
@@ -169,16 +148,11 @@ func NewInitApp(
 	// The ParamsKeeper handles parameter storage for the application
 	app.paramsKeeper = params.NewKeeper(app.cdc, keys[params.StoreKey], tKeys[params.TStoreKey])
 	// Set specific supspaces
-	app.paramsKeeper = params.NewKeeper(app.cdc, keys[params.StoreKey], tKeys[params.TStoreKey])
 	app.subspaces[auth.ModuleName] = app.paramsKeeper.Subspace(auth.DefaultParamspace)
 	app.subspaces[bank.ModuleName] = app.paramsKeeper.Subspace(bank.DefaultParamspace)
 	app.subspaces[staking.ModuleName] = app.paramsKeeper.Subspace(staking.DefaultParamspace)
-	app.subspaces[mint.ModuleName] = app.paramsKeeper.Subspace(mint.DefaultParamspace)
 	app.subspaces[distr.ModuleName] = app.paramsKeeper.Subspace(distr.DefaultParamspace)
 	app.subspaces[slashing.ModuleName] = app.paramsKeeper.Subspace(slashing.DefaultParamspace)
-	app.subspaces[gov.ModuleName] = app.paramsKeeper.Subspace(gov.DefaultParamspace).WithKeyTable(gov.ParamKeyTable())
-	app.subspaces[crisis.ModuleName] = app.paramsKeeper.Subspace(crisis.DefaultParamspace)
-	app.subspaces[evidence.ModuleName] = app.paramsKeeper.Subspace(evidence.DefaultParamspace)
 
 	// The AccountKeeper handles address -> account lookups
 	app.accountKeeper = auth.NewAccountKeeper(
@@ -212,15 +186,6 @@ func NewInitApp(
 		app.subspaces[staking.ModuleName],
 	)
 
-	app.mintKeeper = mint.NewKeeper(
-		app.cdc,
-		keys[mint.StoreKey],
-		app.subspaces[mint.ModuleName],
-		&stakingKeeper,
-		app.supplyKeeper,
-		auth.FeeCollectorName,
-	)
-
 	app.distrKeeper = distr.NewKeeper(
 		app.cdc,
 		keys[distr.StoreKey],
@@ -238,50 +203,20 @@ func NewInitApp(
 		app.subspaces[slashing.ModuleName],
 	)
 
-	app.crisisKeeper = crisis.NewKeeper(
-		app.subspaces[crisis.ModuleName], invCheckPeriod, app.supplyKeeper, auth.FeeCollectorName,
-	)
-
-	// app.privateEventKeeper = privateevents.NewKeeper(
-	// 	app.bankKeeper,
-	// 	app.cdc,
-	// 	keys[privateevents.StoreKey],
-	// )
-
-	app.upgradeKeeper = upgrade.NewKeeper(skipUpgradeHeights, keys[upgrade.StoreKey], app.cdc)
-
-	// create evidence keeper with evidence router
-	evidenceKeeper := evidence.NewKeeper(
-		app.cdc, keys[evidence.StoreKey], app.subspaces[evidence.ModuleName], &stakingKeeper, app.slashingKeeper,
-	)
-	evidenceRouter := evidence.NewRouter()
-
-	// TODO: register evidence routes
-	evidenceKeeper.SetRouter(evidenceRouter)
-
-	app.evidenceKeeper = *evidenceKeeper
-
-	// register the proposal types
-	govRouter := gov.NewRouter()
-	govRouter.AddRoute(gov.RouterKey, gov.ProposalHandler).
-		AddRoute(params.RouterKey, params.NewParamChangeProposalHandler(app.paramsKeeper)).
-		AddRoute(distr.RouterKey, distr.NewCommunityPoolSpendProposalHandler(app.distrKeeper)).
-		AddRoute(upgrade.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(app.upgradeKeeper))
-	app.govKeeper = gov.NewKeeper(
-		app.cdc, keys[gov.StoreKey], app.subspaces[gov.ModuleName],
-		app.supplyKeeper, &stakingKeeper, govRouter,
-	)
-
 	// register the staking hooks
 	// NOTE: stakingKeeper above is passed by reference, so that it will contain these hooks
 	app.stakingKeeper = *stakingKeeper.SetHooks(
 		staking.NewMultiStakingHooks(
 			app.distrKeeper.Hooks(),
-			app.slashingKeeper.Hooks(),
-		),
+			app.slashingKeeper.Hooks()),
 	)
 
 	// TODO: Add your module(s) keepers
+	app.privateEventKeeper = privateevents.NewKeeper(
+		app.cdc,
+		keys[privateevents.StoreKey],
+		app.subspaces[privateevents.ModuleName],
+	)
 
 	// NOTE: Any module instantiated in the module manager that is later modified
 	// must be passed by reference here.
@@ -289,24 +224,20 @@ func NewInitApp(
 		genutil.NewAppModule(app.accountKeeper, app.stakingKeeper, app.BaseApp.DeliverTx),
 		auth.NewAppModule(app.accountKeeper),
 		bank.NewAppModule(app.bankKeeper, app.accountKeeper),
-		crisis.NewAppModule(&app.crisisKeeper),
 		supply.NewAppModule(app.supplyKeeper, app.accountKeeper),
-		gov.NewAppModule(app.govKeeper, app.accountKeeper, app.supplyKeeper),
-		mint.NewAppModule(app.mintKeeper),
-		slashing.NewAppModule(app.slashingKeeper, app.accountKeeper, app.stakingKeeper),
 		distr.NewAppModule(app.distrKeeper, app.accountKeeper, app.supplyKeeper, app.stakingKeeper),
+		slashing.NewAppModule(app.slashingKeeper, app.accountKeeper, app.stakingKeeper),
 		// TODO: Add your module(s)
+		privateevents.NewAppModule(app.privateEventKeeper),
 		staking.NewAppModule(app.stakingKeeper, app.accountKeeper, app.supplyKeeper),
-		upgrade.NewAppModule(app.upgradeKeeper),
-		evidence.NewAppModule(app.evidenceKeeper),
-		privateevents.NewAppModule(app.privateEventKeeper, app.bankKeeper),
+		slashing.NewAppModule(app.slashingKeeper, app.accountKeeper, app.stakingKeeper),
 	)
 	// During begin block slashing happens after distr.BeginBlocker so that
 	// there is nothing left over in the validator fee pool, so as to keep the
 	// CanWithdrawInvariant invariant.
 
-	app.mm.SetOrderBeginBlockers(upgrade.ModuleName, mint.ModuleName, distr.ModuleName, slashing.ModuleName)
-	app.mm.SetOrderEndBlockers(crisis.ModuleName, gov.ModuleName, staking.ModuleName)
+	app.mm.SetOrderBeginBlockers(distr.ModuleName, slashing.ModuleName)
+	app.mm.SetOrderEndBlockers(staking.ModuleName)
 
 	// Sets the order of Genesis - Order matters, genutil is to always come last
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -317,14 +248,10 @@ func NewInitApp(
 		auth.ModuleName,
 		bank.ModuleName,
 		slashing.ModuleName,
-		gov.ModuleName,
-		mint.ModuleName,
 		// TODO: Add your module(s)
-		supply.ModuleName,
-		crisis.ModuleName,
-		genutil.ModuleName,
-		evidence.ModuleName,
 		privateevents.ModuleName,
+		supply.ModuleName,
+		genutil.ModuleName,
 	)
 
 	// register all module routes and module queriers
@@ -343,24 +270,6 @@ func NewInitApp(
 			auth.DefaultSigVerificationGasConsumer,
 		),
 	)
-
-	// create the simulation manager and define the order of the modules for deterministic simulations
-	//
-	// NOTE: This is not required for apps that don't use the simulator for fuzz testing
-	// transactions.
-	app.sm = module.NewSimulationManager(
-		auth.NewAppModule(app.accountKeeper),
-		bank.NewAppModule(app.bankKeeper, app.accountKeeper),
-		supply.NewAppModule(app.supplyKeeper, app.accountKeeper),
-		gov.NewAppModule(app.govKeeper, app.accountKeeper, app.supplyKeeper),
-		mint.NewAppModule(app.mintKeeper),
-		distr.NewAppModule(app.distrKeeper, app.accountKeeper, app.supplyKeeper, app.stakingKeeper),
-		staking.NewAppModule(app.stakingKeeper, app.accountKeeper, app.supplyKeeper),
-		slashing.NewAppModule(app.slashingKeeper, app.accountKeeper, app.stakingKeeper),
-		// TODO: Add your module(s)
-	)
-
-	app.sm.RegisterStoreDecoders()
 
 	// initialize stores
 	app.MountKVStores(keys)

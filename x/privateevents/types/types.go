@@ -3,16 +3,18 @@ package types
 import (
 	"fmt"
 	"strings"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 type CreateEvent struct {
-	EventId   int      `json:"event_id"`
-	StartTime int      `json:"start_time"`
-	Question  string   `json:"question"`
-	Answers   []string `json:"answers"`
-	Winner    string   `json:"winner"`
-	Loser     string   `json:"loser"`
-	Owner     string   `json:"owner"`
+	EventId   uint           `json:"event_id"`
+	StartTime uint           `json:"start_time"`
+	Question  string         `json:"question"`
+	Answers   []string       `json:"answers"`
+	Winner    string         `json:"winner"`
+	Loser     string         `json:"loser"`
+	Owner     sdk.AccAddress `json:"owner"`
 }
 
 func (s CreateEvent) String() string {

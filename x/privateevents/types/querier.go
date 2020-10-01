@@ -3,8 +3,8 @@ package types
 import "strings"
 
 const (
-	QueryListPrivateEvent  = "list"
-	QueryGetSinglePrivateEvent   = "get"
+	QueryListPrivateEvent      = "list"
+	QueryGetSinglePrivateEvent = "get"
 	QueryGetPrivateEventStatus = "status"
 )
 
@@ -15,4 +15,3 @@ type QueryResPrivateEvent []string
 func (n QueryResPrivateEvent) String() string {
 	return strings.Join(n[:], "\n")
 }
-

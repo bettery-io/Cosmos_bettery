@@ -16,7 +16,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/cosmos/cosmos-sdk/x/bank"
 )
 
 // Type check to ensure the interface is properly implemented
@@ -30,7 +29,7 @@ type AppModuleBasic struct{}
 
 // Name returns the privateevents module's name.
 func (AppModuleBasic) Name() string {
-	return types.ModuleName
+	return ModuleName
 }
 
 // RegisterCodec registers the privateevents module's types for the given codec.
@@ -74,17 +73,16 @@ func (AppModuleBasic) GetQueryCmd(cdc *codec.Codec) *cobra.Command {
 // AppModule implements an application module for the privateevents module.
 type AppModule struct {
 	AppModuleBasic
-	keeper     keeper.Keeper
-	coinKeeper bank.Keeper
+
+	keeper keeper.Keeper
 	// TODO: Add keepers that your application depends on
 }
 
 // NewAppModule creates a new AppModule object
-func NewAppModule(k keeper.Keeper, bankKeeper bank.Keeper) AppModule {
+func NewAppModule(k keeper.Keeper /*TODO: Add Keepers that your application depends on*/) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{},
 		keeper:         k,
-		coinKeeper:     bankKeeper,
 		// TODO: Add keepers that your application depends on
 	}
 }

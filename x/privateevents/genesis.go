@@ -7,7 +7,7 @@ import (
 
 // InitGenesis initialize default parameters
 // and the keeper's address to pubkey map
-func InitGenesis(ctx sdk.Context, k Keeper /* TODO: Define what keepers the module needs */, data GenesisState) {
+func InitGenesis(ctx sdk.Context, k Keeper /* TODO: Define what keepers the module needs */, data types.GenesisState) {
 	// TODO: Define logic for when you would like to initialize a new genesis
 }
 

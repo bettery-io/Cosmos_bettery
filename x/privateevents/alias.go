@@ -25,6 +25,7 @@ var (
 	DefaultGenesisState = types.DefaultGenesisState
 	ValidateGenesis     = types.ValidateGenesis
 	// TODO: Fill out function aliases
+	NewMsgPrivateCreateEvent = types.NewMsgPrivateCreateEvent
 
 	// variable aliases
 	ModuleCdc = types.ModuleCdc
@@ -36,4 +37,5 @@ type (
 	Params       = types.Params
 
 	// TODO: Fill out module types
+	MsgPrivateCreateEvent = types.MsgPrivateCreateEvent
 )

@@ -5,19 +5,20 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/VoroshilovMax/Bettery/x/privateevents/types"
 	"github.com/gorilla/mux"
 
 	"github.com/cosmos/cosmos-sdk/client/context"
-	// sdk "github.com/cosmos/cosmos-sdk/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/x/auth/client/utils"
+
 	"github.com/cosmos/cosmos-sdk/types/rest"
-	// "github.com/cosmos/cosmos-sdk/x/auth/client/utils"
-	// "github.com/VoroshilovMax/Bettery/x/privateevents/types"
 )
 
 type createEvent struct {
 	BaseReq   rest.BaseReq `json:"base_req"`
-	EventId   int          `json:"event_id"`
-	StartTime int          `json:"start_time"`
+	EventId   uint         `json:"event_id"`
+	StartTime uint         `json:"start_time"`
 	Question  string       `json:"question"`
 	Answers   []string     `json:"answers"`
 	Winner    string       `json:"winner"`
@@ -40,7 +41,38 @@ func createPrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
 			return
 		}
 
+		baseReq := req.BaseReq.Sanitize()
+		if !baseReq.ValidateBasic(w) {
+			return
+		}
+
 		fmt.Println(req.Owner)
+
+		onwer, err := sdk.AccAddressFromBech32(req.Owner)
+		if err != nil {
+			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+			return
+		}
+
+		msg := types.NewMsgPrivateCreateEvent(
+			req.EventId,
+			req.StartTime,
+			req.Question,
+			req.Answers,
+			req.Winner,
+			req.Loser,
+			onwer,
+		)
+		err = msg.ValidateBasic()
+		if err := msg.ValidateBasic(); err != nil {
+			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+			return
+		}
+
+		fmt.Println("WORK")
+
+		utils.WriteGenerateStdTxResponse(w, cliCtx, baseReq, []sdk.Msg{msg})
+
 	}
 }
 

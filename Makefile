@@ -12,7 +12,7 @@ ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=NewApp \
 
 BUILD_FLAGS := -ldflags '$(ldflags)'
 
-all: clean install
+all: clean install 
 
 clean:
 	rm -f betteryd 

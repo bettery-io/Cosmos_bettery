@@ -13,11 +13,8 @@ func NewHandler(k Keeper) sdk.Handler {
 	return func(ctx sdk.Context, msg sdk.Msg) (*sdk.Result, error) {
 		ctx = ctx.WithEventManager(sdk.NewEventManager())
 		switch msg := msg.(type) {
-		// TODO: Define your msg cases
-		//
-		//Example:
-		// case Msg<Action>:
-		// 	return handleMsg<Action>(ctx, k, msg)
+		case MsgPrivateCreateEvent:
+			return handelMsgPrivateCreateEvent(ctx, k, msg)
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", ModuleName, msg)
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)
@@ -25,21 +22,39 @@ func NewHandler(k Keeper) sdk.Handler {
 	}
 }
 
-// handle<Action> does x
-func handleMsg(ctx sdk.Context, k Keeper) (*sdk.Result, error) {
-	// err := k.<Action>(ctx, msg.ValidatorAddr)
-	// if err != nil {
-	// 	return nil, err
-	// }
+func handelMsgPrivateCreateEvent(ctx sdk.Context, k Keeper, msg MsgPrivateCreateEvent) (*sdk.Result, error) {
+	var event = types.CreateEvent{
+		EventId:   msg.EventId,
+		StartTime: msg.StartTime,
+		Question:  msg.Question,
+		Answers:   msg.Answers,
+		Winner:    msg.Winner,
+		Loser:     msg.Loser,
+		Owner:     msg.Owner,
+	}
 
-	// TODO: Define your msg events
-	ctx.EventManager().EmitEvent(
+	fmt.Println(event)
+
+	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			sdk.EventTypeMessage,
 			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
-		//	sdk.NewAttribute(sdk.AttributeKeySender, msg.ValidatorAddr.String()),
+		// 	sdk.NewAttribute(sdk.AttributeKeySender, msg.ValidatorAddress.String()),
+		// ),
+		// sdk.NewEvent(
+		// 	types.EventTypeCreateClaim,
+		// 	sdk.NewAttribute(types.AttributeKeyEthereumSender, msg.EthereumSender.String()),
+		// 	sdk.NewAttribute(types.AttributeKeyCosmosReceiver, msg.CosmosReceiver.String()),
+		// 	sdk.NewAttribute(types.AttributeKeyAmount, strconv.FormatInt(msg.Amount, 10)),
+		// 	sdk.NewAttribute(types.AttributeKeySymbol, msg.Symbol),
+		// 	sdk.NewAttribute(types.AttributeKeyTokenContract, msg.TokenContractAddress.String()),
+		// 	sdk.NewAttribute(types.AttributeKeyClaimType, msg.ClaimType.String()),
+		// ),
+		// sdk.NewEvent(
+		// 	types.EventTypeProphecyStatus,
+		// 	sdk.NewAttribute(types.AttributeKeyStatus, status.Text.String()),
 		),
-	)
+	})
 
 	return &sdk.Result{Events: ctx.EventManager().Events()}, nil
 }

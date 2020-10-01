@@ -5,7 +5,6 @@ import (
 	"os"
 	"path"
 
-	"github.com/VoroshilovMax/Bettery/app"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/keys"
@@ -18,10 +17,15 @@ import (
 	authrest "github.com/cosmos/cosmos-sdk/x/auth/client/rest"
 	"github.com/cosmos/cosmos-sdk/x/bank"
 	bankcmd "github.com/cosmos/cosmos-sdk/x/bank/client/cli"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
 	"github.com/tendermint/go-amino"
 	"github.com/tendermint/tendermint/libs/cli"
+
+	"github.com/VoroshilovMax/Bettery/app"
+
 )
 
 func main() {
@@ -43,7 +47,7 @@ func main() {
 	// with the cdc
 
 	rootCmd := &cobra.Command{
-		Use:   "betterycli",
+		Use:   "appcli",
 		Short: "Command line interface for interacting with appd",
 	}
 
