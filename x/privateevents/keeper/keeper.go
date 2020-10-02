@@ -12,19 +12,18 @@ import (
 
 // Keeper of the privateevents store
 type Keeper struct {
+	CoinKeeper types.BankKeeper
 	storeKey   sdk.StoreKey
 	cdc        *codec.Codec
-	paramspace types.ParamSubspace
 }
 
 // NewKeeper creates a privateevents keeper
-func NewKeeper(cdc *codec.Codec, key sdk.StoreKey, paramspace types.ParamSubspace) Keeper {
-	keeper := Keeper{
-		storeKey:   key,
+func NewKeeper(cdc *codec.Codec, storeKey sdk.StoreKey, coinKeeper types.BankKeeper) Keeper {
+	return Keeper{
 		cdc:        cdc,
-		paramspace: paramspace.WithKeyTable(types.ParamKeyTable()),
+		storeKey:   storeKey,
+		CoinKeeper: coinKeeper,
 	}
-	return keeper
 }
 
 // Logger returns a module-specific logger.

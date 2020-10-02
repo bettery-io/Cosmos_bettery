@@ -1,8 +1,6 @@
 package types
 
 import (
-	"encoding/json"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -51,11 +49,7 @@ func (msg MsgPrivateCreateEvent) GetSigners() []sdk.AccAddress {
 
 // GetSignBytes gets the bytes for the message signer to sign on
 func (msg MsgPrivateCreateEvent) GetSignBytes() []byte {
-	b, err := json.Marshal(msg)
-	if err != nil {
-		panic(err)
-	}
-	return sdk.MustSortJSON(b)
+	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(msg))
 }
 
 // !!! Нужно потестить будет ли работать логика с msg.QuizId == 0

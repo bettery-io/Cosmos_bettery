@@ -215,7 +215,7 @@ func NewInitApp(
 	app.privateEventKeeper = privateevents.NewKeeper(
 		app.cdc,
 		keys[privateevents.StoreKey],
-		app.subspaces[privateevents.ModuleName],
+		app.bankKeeper,
 	)
 
 	// NOTE: Any module instantiated in the module manager that is later modified

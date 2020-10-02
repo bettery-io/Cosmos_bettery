@@ -28,7 +28,7 @@ type createEvent struct {
 
 func registerTxRoutes(cliCtx context.CLIContext, r *mux.Router) {
 	r.HandleFunc(
-		"/private_event/create", createPrivateEvent(cliCtx),
+		"/privateevent/create", createPrivateEvent(cliCtx),
 	).Methods("POST")
 }
 

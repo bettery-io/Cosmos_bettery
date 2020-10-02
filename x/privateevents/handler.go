@@ -35,26 +35,27 @@ func handelMsgPrivateCreateEvent(ctx sdk.Context, k Keeper, msg MsgPrivateCreate
 
 	fmt.Println(event)
 
-	ctx.EventManager().EmitEvents(sdk.Events{
-		sdk.NewEvent(
-			sdk.EventTypeMessage,
-			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
-		// 	sdk.NewAttribute(sdk.AttributeKeySender, msg.ValidatorAddress.String()),
-		// ),
-		// sdk.NewEvent(
-		// 	types.EventTypeCreateClaim,
-		// 	sdk.NewAttribute(types.AttributeKeyEthereumSender, msg.EthereumSender.String()),
-		// 	sdk.NewAttribute(types.AttributeKeyCosmosReceiver, msg.CosmosReceiver.String()),
-		// 	sdk.NewAttribute(types.AttributeKeyAmount, strconv.FormatInt(msg.Amount, 10)),
-		// 	sdk.NewAttribute(types.AttributeKeySymbol, msg.Symbol),
-		// 	sdk.NewAttribute(types.AttributeKeyTokenContract, msg.TokenContractAddress.String()),
-		// 	sdk.NewAttribute(types.AttributeKeyClaimType, msg.ClaimType.String()),
-		// ),
-		// sdk.NewEvent(
-		// 	types.EventTypeProphecyStatus,
-		// 	sdk.NewAttribute(types.AttributeKeyStatus, status.Text.String()),
-		),
-	})
+	// ctx.EventManager().EmitEvents(sdk.Events{
+	// 	sdk.NewEvent(
+	// 		sdk.EventTypeMessage,
+	// 		sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+	// 	sdk.NewAttribute(sdk.AttributeKeySender, msg.ValidatorAddress.String()),
+	// ),
+	// sdk.NewEvent(
+	// 	types.EventTypeCreateClaim,
+	// 	sdk.NewAttribute(types.AttributeKeyEthereumSender, msg.EthereumSender.String()),
+	// 	sdk.NewAttribute(types.AttributeKeyCosmosReceiver, msg.CosmosReceiver.String()),
+	// 	sdk.NewAttribute(types.AttributeKeyAmount, strconv.FormatInt(msg.Amount, 10)),
+	// 	sdk.NewAttribute(types.AttributeKeySymbol, msg.Symbol),
+	// 	sdk.NewAttribute(types.AttributeKeyTokenContract, msg.TokenContractAddress.String()),
+	// 	sdk.NewAttribute(types.AttributeKeyClaimType, msg.ClaimType.String()),
+	// ),
+	// sdk.NewEvent(
+	// 	types.EventTypeProphecyStatus,
+	// 	sdk.NewAttribute(types.AttributeKeyStatus, status.Text.String()),
+	//		),
+	//	})
 
-	return &sdk.Result{Events: ctx.EventManager().Events()}, nil
+	//return &sdk.Result{Events: ctx.EventManager().Events()}, nil
+	return &sdk.Result{}, nil
 }
