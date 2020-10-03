@@ -2,7 +2,7 @@ package rest
 
 import (
 	// "bytes"
-	"fmt"
+
 	"net/http"
 
 	"github.com/VoroshilovMax/Bettery/x/privateevents/types"
@@ -27,9 +27,7 @@ type createEvent struct {
 }
 
 func registerTxRoutes(cliCtx context.CLIContext, r *mux.Router) {
-	r.HandleFunc(
-		"/privateevent/create", createPrivateEvent(cliCtx),
-	).Methods("POST")
+	r.HandleFunc("/privateevent/create", createPrivateEvent(cliCtx)).Methods("POST")
 }
 
 func createPrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
@@ -46,9 +44,13 @@ func createPrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
 			return
 		}
 
-		fmt.Println(req.Owner)
-
 		onwer, err := sdk.AccAddressFromBech32(req.Owner)
+		if err != nil {
+			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+			return
+		}
+
+		validator, err := sdk.AccAddressFromBech32(req.BaseReq.From)
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
 			return
@@ -62,40 +64,15 @@ func createPrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
 			req.Winner,
 			req.Loser,
 			onwer,
+			validator,
 		)
 		err = msg.ValidateBasic()
-		if err := msg.ValidateBasic(); err != nil {
+		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
 			return
 		}
-
-		fmt.Println("WORK")
 
 		utils.WriteGenerateStdTxResponse(w, cliCtx, baseReq, []sdk.Msg{msg})
 
 	}
 }
-
-/*
-// Action TX body
-type <Action>Req struct {
-	BaseReq rest.BaseReq `json:"base_req" yaml:"base_req"`
-	// TODO: Define more types if needed
-}
-
-func <Action>RequestHandlerFn(cliCtx context.CLIContext) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		var req <Action>Req
-		vars := mux.Vars(r)
-
-		baseReq := req.BaseReq.Sanitize()
-		if !baseReq.ValidateBasic(w) {
-			return
-		}
-
-		// TODO: Define the module tx logic for this action
-
-		utils.WriteGenerateStdTxResponse(w, cliCtx, BaseReq, []sdk.Msg{msg})
-	}
-}
-*/

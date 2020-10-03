@@ -1,4 +1,5 @@
 const path = require("../../config/path");
+const config = require("../../config/cosmosConfig");
 const axios = require("axios");
 const helper = require('../../helpers/signTsx');
 
@@ -9,7 +10,7 @@ const header = {
 }
 
 const createEvent = async (req, res) => {
-    let send = await axios.post(path.path + '/privateevent/create', req.body, header
+    let send = await axios.post(path.path + '/privateevent/create', req.body, config.header
     ).catch((err) => {
         res.status(400);
         res.send(err.response.data.error);
@@ -25,7 +26,7 @@ const createEvent = async (req, res) => {
             "mode": "async"
         }
 
-        let txs = await axios.post(path.path + '/txs', sendTxs, header
+        let txs = await axios.post(path.path + '/txs', sendTxs, config.header
         ).catch((err) => {
             res.status(400);
             res.send(err.response.data.error);

@@ -1,32 +1,41 @@
 const sig = require('@tendermint/sig');
-const redis = require("redis");
-const util = require('util');
 const { readFileSync } = require('fs');
 const path = require('path');
 const cocmosCong = require('../config/cosmosConfig');
+const demonPatn = require('../config/path')
+const axios = require("axios");
 
-const redisUrl = path.redisUrl;
-const client = redis.createClient(redisUrl);
-client.hget = util.promisify(client.hget);
+
+const getWalet = () => {
+    const mnemonic = readFileSync(path.join(__dirname, '../secret'), 'utf-8')
+    return sig.createWalletFromMnemonic(mnemonic);
+}
 
 const signTransaction = async (tx) => {
-    const mnemonic = readFileSync(path.join(__dirname, '../secret'), 'utf-8')
-    const wallet = sig.createWalletFromMnemonic(mnemonic);
-
-    const value = await client.hget(cocmosCong.chain_id, "sequence");
-    let sequence = value ? value : "0";
+    const wallet = getWalet();
+    let { sequence, account_number } = await getSequence()
 
     const signMeta = {
-        account_number: '1',
-        chain_id: 'cosmos',
-        sequence: sequence
+        account_number: String(account_number),
+        chain_id: cocmosCong.chain_id,
+        sequence: String(sequence)
     };
 
-    sequence = Number(sequence) + 1;
+    return sig.signTx(tx.value, signMeta, wallet);
+}
 
-    client.hset(cocmosCong.chain_id, "sequence", String(sequence));
 
-    return sig.signTx(tx, signMeta, wallet);
+const getSequence = async () => {
+    let wallet = getWalet()
+    let send = await axios.get(demonPatn.path + '/auth/accounts/' + wallet.address
+    ).catch((err) => {
+        console.log(err.response.data.error);
+    })
+    if (send) {
+        let sequence = send.data.result.value.sequence;
+        let account_number = send.data.result.value.account_number;
+        return { sequence, account_number }
+    }
 }
 
 module.exports = {

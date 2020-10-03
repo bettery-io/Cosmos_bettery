@@ -5,7 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-// var _ sdk.Msg = &MsgPrivateCreateEvent{}
+var _ sdk.Msg = &MsgPrivateCreateEvent{}
 
 type MsgPrivateCreateEvent struct {
 	EventId   uint           `json:"event_id"`
@@ -15,6 +15,7 @@ type MsgPrivateCreateEvent struct {
 	Winner    string         `json:"winner"`
 	Loser     string         `json:"loser"`
 	Owner     sdk.AccAddress `json:"owner"`
+	Validator sdk.AccAddress `json:"validator"`
 }
 
 // NewMsgCreateEvent creates a new MsgPrivateCreateEvent instance
@@ -26,6 +27,7 @@ func NewMsgPrivateCreateEvent(
 	_winner string,
 	_loser string,
 	_owner sdk.AccAddress,
+	_validator sdk.AccAddress,
 ) MsgPrivateCreateEvent {
 	return MsgPrivateCreateEvent{
 		EventId:   _eventId,
@@ -35,6 +37,7 @@ func NewMsgPrivateCreateEvent(
 		Winner:    _winner,
 		Loser:     _loser,
 		Owner:     _owner,
+		Validator: _validator,
 	}
 }
 
@@ -44,7 +47,7 @@ const CreatePrivateEventConst = "CreatePrivateEvent"
 func (msg MsgPrivateCreateEvent) Route() string { return RouterKey }
 func (msg MsgPrivateCreateEvent) Type() string  { return CreatePrivateEventConst }
 func (msg MsgPrivateCreateEvent) GetSigners() []sdk.AccAddress {
-	return []sdk.AccAddress{sdk.AccAddress(msg.Owner)}
+	return []sdk.AccAddress{sdk.AccAddress(msg.Validator)}
 }
 
 // GetSignBytes gets the bytes for the message signer to sign on
@@ -52,7 +55,6 @@ func (msg MsgPrivateCreateEvent) GetSignBytes() []byte {
 	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(msg))
 }
 
-// !!! Нужно потестить будет ли работать логика с msg.QuizId == 0
 func (msg MsgPrivateCreateEvent) ValidateBasic() error {
 	if msg.EventId == 0 {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "event id can't be empty")
@@ -70,10 +72,13 @@ func (msg MsgPrivateCreateEvent) ValidateBasic() error {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "winner can't be empty")
 	}
 	if len(msg.Loser) == 0 {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "percent host can't be empty")
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "loser can't be empty")
 	}
 	if msg.Owner.Empty() {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "percent validator can't be empty")
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "address owner can't be empty")
+	}
+	if msg.Validator.Empty() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "address validator can't be empty")
 	}
 	return nil
 }

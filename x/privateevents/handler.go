@@ -33,7 +33,7 @@ func handelMsgPrivateCreateEvent(ctx sdk.Context, k Keeper, msg MsgPrivateCreate
 		Owner:     msg.Owner,
 	}
 
-	fmt.Println(event)
+	fmt.Println(event.Winner)
 
 	// ctx.EventManager().EmitEvents(sdk.Events{
 	// 	sdk.NewEvent(
