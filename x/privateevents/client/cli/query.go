@@ -28,12 +28,8 @@ func GetQueryCmd(queryRoute string, cdc *codec.Codec) *cobra.Command {
 	}
 
 	privateeventsQueryCmd.AddCommand(
-		flags.GetCommands(
-		// TODO: Add query Cmds
-		)...,
+		flags.GetCommands()...,
 	)
 
 	return privateeventsQueryCmd
 }
-
-// TODO: Add Query Commands

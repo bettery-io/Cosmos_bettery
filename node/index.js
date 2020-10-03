@@ -14,6 +14,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 require('./services/privateevents')(app);
+require('./services/auth')(app);
 
 const httpServer = http.createServer(app);
 

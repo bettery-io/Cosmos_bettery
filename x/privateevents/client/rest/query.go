@@ -6,35 +6,34 @@ import (
 
 	"github.com/gorilla/mux"
 
+	"github.com/VoroshilovMax/Bettery/x/privateevents/types"
 	"github.com/cosmos/cosmos-sdk/client/context"
 	"github.com/cosmos/cosmos-sdk/types/rest"
-	"github.com/VoroshilovMax/Bettery/x/privateevents/types"
 )
 
 func registerQueryRoutes(cliCtx context.CLIContext, r *mux.Router) {
-	// TODO: Define your GET REST endpoints
-	r.HandleFunc(
-		"/privateevents/parameters",
-		queryParamsHandlerFn(cliCtx),
-	).Methods("GET")
+	r.HandleFunc("/privateevents/{id}", getEventById(cliCtx)).Methods("GET")
 }
 
-func queryParamsHandlerFn(cliCtx context.CLIContext) http.HandlerFunc {
+// TODO: Make better structure for single event with all participant and validators
+func getEventById(cliCtx context.CLIContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+
+		eventId := mux.Vars(r)["id"]
 		cliCtx, ok := rest.ParseQueryHeightOrReturnBadRequest(w, cliCtx, r)
 		if !ok {
 			return
 		}
 
-		route := fmt.Sprintf("custom/%s/parameters", types.QuerierRoute)
-
-		res, height, err := cliCtx.QueryWithData(route, nil)
+		res, _, err := cliCtx.QueryWithData(fmt.Sprintf("custom/%s/%s/%s", types.QuerierRoute, types.QueryGetSinglePrivateEvent, eventId), nil)
 		if err != nil {
-			rest.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+			rest.WriteErrorResponse(w, http.StatusNotFound, "could not resolve quiz by id: "+eventId+" ,"+err.Error())
+			fmt.Printf("could not resolve quiz %s \n%s\n", eventId, err.Error())
 			return
 		}
 
-		cliCtx = cliCtx.WithHeight(height)
+		var out types.CreateEvent
+		cliCtx.Codec.MustUnmarshalJSON(res, &out)
 		rest.PostProcessResponse(w, cliCtx, res)
 	}
 }

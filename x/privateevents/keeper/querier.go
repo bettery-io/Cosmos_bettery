@@ -16,29 +16,25 @@ import (
 func NewQuerier(k Keeper) sdk.Querier {
 	return func(ctx sdk.Context, path []string, req abci.RequestQuery) ([]byte, error) {
 		switch path[0] {
-		case types.QueryListPrivateEvent:
-			return queryParams(ctx, k)
-			// TODO: Put the modules query routes
+		case types.QueryGetSinglePrivateEvent:
+			return queryGetSinglePrivateEvent(ctx, path[1:], k)
 		default:
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, "unknown privateevents query endpoint")
 		}
 	}
 }
 
-func queryParams(ctx sdk.Context, k Keeper) ([]byte, error) {
-	params, err := k.Get(ctx, "key")
-
+func queryGetSinglePrivateEvent(ctx sdk.Context, path []string, k Keeper) (res []byte, sdkError error) {
+	eventId := path[0]
+	event, err := k.GetPrivateEvent(ctx, eventId)
 	if err != nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, err.Error())
+		return nil, err
 	}
 
-	res, err := codec.MarshalJSONIndent(types.ModuleCdc, params)
+	res, err = codec.MarshalJSONIndent(k.cdc, event)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, err.Error())
 	}
 
 	return res, nil
 }
-
-// TODO: Add the modules query functions
-// They will be similar to the above one: queryParams()

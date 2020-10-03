@@ -27,7 +27,6 @@ func GetTxCmd(cdc *codec.Codec) *cobra.Command {
 	}
 
 	privateeventsTxCmd.AddCommand(flags.PostCommands(
-	// TODO: Add tx based commands
 	// GetCmd<Action>(cdc)
 	)...)
 

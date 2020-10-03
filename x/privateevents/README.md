@@ -1,4 +1,4 @@
-# TODO
+# Infifnity
 
 The scaffolding tool creates a module with countless todos. These todos are placed in places in which you much delete them and fill them with what the module you are building needs.
 

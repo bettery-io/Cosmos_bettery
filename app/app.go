@@ -31,12 +31,8 @@ import (
 const appName = "app"
 
 var (
-	// TODO: rename your cli
-
 	// DefaultCLIHome default home directories for the application CLI
 	DefaultCLIHome = os.ExpandEnv("$HOME/.betterycli")
-
-	// TODO: rename your daemon
 
 	// DefaultNodeHome sets the folder where the application data and configuration will be stored
 	DefaultNodeHome = os.ExpandEnv("$HOME/.betteryd")
@@ -53,7 +49,7 @@ var (
 		params.AppModuleBasic{},
 		slashing.AppModuleBasic{},
 		supply.AppModuleBasic{},
-		// TODO: Add your module(s) AppModuleBasic
+
 		privateevents.AppModuleBasic{},
 	)
 
@@ -94,14 +90,13 @@ type NewApp struct {
 	subspaces map[string]params.Subspace
 
 	// keepers
-	accountKeeper  auth.AccountKeeper
-	bankKeeper     bank.Keeper
-	stakingKeeper  staking.Keeper
-	slashingKeeper slashing.Keeper
-	distrKeeper    distr.Keeper
-	supplyKeeper   supply.Keeper
-	paramsKeeper   params.Keeper
-	// TODO: Add your module(s)
+	accountKeeper      auth.AccountKeeper
+	bankKeeper         bank.Keeper
+	stakingKeeper      staking.Keeper
+	slashingKeeper     slashing.Keeper
+	distrKeeper        distr.Keeper
+	supplyKeeper       supply.Keeper
+	paramsKeeper       params.Keeper
 	privateEventKeeper privateevents.Keeper
 
 	// Module Manager
@@ -127,7 +122,6 @@ func NewInitApp(
 	bApp.SetCommitMultiStoreTracer(traceStore)
 	bApp.SetAppVersion(version.Version)
 
-	// TODO: Add the keys that module requires
 	keys := sdk.NewKVStoreKeys(bam.MainStoreKey, auth.StoreKey, staking.StoreKey,
 		supply.StoreKey, distr.StoreKey, slashing.StoreKey, params.StoreKey,
 		privateevents.StoreKey,
@@ -211,7 +205,6 @@ func NewInitApp(
 			app.slashingKeeper.Hooks()),
 	)
 
-	// TODO: Add your module(s) keepers
 	app.privateEventKeeper = privateevents.NewKeeper(
 		app.cdc,
 		keys[privateevents.StoreKey],
@@ -227,8 +220,7 @@ func NewInitApp(
 		supply.NewAppModule(app.supplyKeeper, app.accountKeeper),
 		distr.NewAppModule(app.distrKeeper, app.accountKeeper, app.supplyKeeper, app.stakingKeeper),
 		slashing.NewAppModule(app.slashingKeeper, app.accountKeeper, app.stakingKeeper),
-		// TODO: Add your module(s)
-		privateevents.NewAppModule(app.privateEventKeeper),
+		privateevents.NewAppModule(app.privateEventKeeper, app.bankKeeper),
 		staking.NewAppModule(app.stakingKeeper, app.accountKeeper, app.supplyKeeper),
 		slashing.NewAppModule(app.slashingKeeper, app.accountKeeper, app.stakingKeeper),
 	)
@@ -248,7 +240,6 @@ func NewInitApp(
 		auth.ModuleName,
 		bank.ModuleName,
 		slashing.ModuleName,
-		// TODO: Add your module(s)
 		privateevents.ModuleName,
 		supply.ModuleName,
 		genutil.ModuleName,

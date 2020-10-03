@@ -3,11 +3,6 @@ const config = require("../../config/cosmosConfig");
 const axios = require("axios");
 const helper = require('../../helpers/signTsx');
 
-const header = {
-    headers: {
-        "Content-Type": "application/json"
-    }
-}
 
 const createEvent = async (req, res) => {
     let send = await axios.post(path.path + '/privateevent/create', req.body, config.header

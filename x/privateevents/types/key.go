@@ -12,4 +12,9 @@ const (
 
 	// QuerierRoute to be used for querier msgs
 	QuerierRoute = ModuleName
+
+	EventPrefix       = "privateEvent-"
+	ParticipantPrefix = "partPrivateEvent-"
+	ValidatorPrefix   = "validPrivateEvent-"
+	EventStatusPrefix = "privateEventStatus-"
 )

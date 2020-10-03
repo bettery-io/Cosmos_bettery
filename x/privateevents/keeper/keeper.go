@@ -2,23 +2,25 @@ package keeper
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/VoroshilovMax/Bettery/x/privateevents/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/x/bank"
 )
 
 // Keeper of the privateevents store
 type Keeper struct {
-	CoinKeeper types.BankKeeper
+	CoinKeeper bank.Keeper
 	storeKey   sdk.StoreKey
 	cdc        *codec.Codec
 }
 
 // NewKeeper creates a privateevents keeper
-func NewKeeper(cdc *codec.Codec, storeKey sdk.StoreKey, coinKeeper types.BankKeeper) Keeper {
+func NewKeeper(cdc *codec.Codec, storeKey sdk.StoreKey, coinKeeper bank.Keeper) Keeper {
 	return Keeper{
 		cdc:        cdc,
 		storeKey:   storeKey,
@@ -32,24 +34,26 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 }
 
 // Get returns the pubkey from the adddress-pubkey relation
-func (k Keeper) Get(ctx sdk.Context, key string) (types.CreateEvent, error) {
+func (k Keeper) GetPrivateEvent(ctx sdk.Context, eventId string) (types.CreateEvent, error) {
 	store := ctx.KVStore(k.storeKey)
-	var item types.CreateEvent
-	byteKey := []byte(key)
-	err := k.cdc.UnmarshalBinaryLengthPrefixed(store.Get(byteKey), &item)
+	var event types.CreateEvent
+	byteKey := []byte(eventId)
+	err := k.cdc.UnmarshalBinaryLengthPrefixed(store.Get(byteKey), &event)
 	if err != nil {
-		return item, err
+		return event, err
 	}
-	return item, nil
+	return event, nil
 }
 
-func (k Keeper) set(ctx sdk.Context, key string, value types.CreateEvent) {
+func (k Keeper) SetPrivateEvent(ctx sdk.Context, event types.CreateEvent) {
+	eventId := event.EventId
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshalBinaryLengthPrefixed(value)
+	bz := k.cdc.MustMarshalBinaryLengthPrefixed(event)
+	key := []byte(types.EventPrefix + strconv.Itoa(int(eventId)))
 	store.Set([]byte(key), bz)
 }
 
-func (k Keeper) delete(ctx sdk.Context, key string) {
-	store := ctx.KVStore(k.storeKey)
-	store.Delete([]byte(key))
-}
+// func (k Keeper) delete(ctx sdk.Context, key string) {
+// 	store := ctx.KVStore(k.storeKey)
+// 	store.Delete([]byte(key))
+// }

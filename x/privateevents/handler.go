@@ -2,6 +2,7 @@ package privateevents
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/VoroshilovMax/Bettery/x/privateevents/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -32,8 +33,13 @@ func handelMsgPrivateCreateEvent(ctx sdk.Context, k Keeper, msg MsgPrivateCreate
 		Loser:     msg.Loser,
 		Owner:     msg.Owner,
 	}
+	// error handel don't work
 
-	fmt.Println(event.Winner)
+	_, err := k.GetPrivateEvent(ctx, strconv.Itoa(int(event.EventId)))
+	if err == nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Quiz already exists")
+	}
+	k.SetPrivateEvent(ctx, event)
 
 	// ctx.EventManager().EmitEvents(sdk.Events{
 	// 	sdk.NewEvent(

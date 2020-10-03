@@ -6,8 +6,6 @@ import (
 )
 
 const (
-	// TODO: define constants that you would like exposed from your module
-
 	ModuleName        = types.ModuleName
 	RouterKey         = types.RouterKey
 	StoreKey          = types.StoreKey
@@ -18,13 +16,12 @@ const (
 
 var (
 	// functions aliases
-	NewKeeper           = keeper.NewKeeper
-	NewQuerier          = keeper.NewQuerier
-	RegisterCodec       = types.RegisterCodec
-	NewGenesisState     = types.NewGenesisState
-	DefaultGenesisState = types.DefaultGenesisState
-	ValidateGenesis     = types.ValidateGenesis
-	// TODO: Fill out function aliases
+	NewKeeper                = keeper.NewKeeper
+	NewQuerier               = keeper.NewQuerier
+	RegisterCodec            = types.RegisterCodec
+	NewGenesisState          = types.NewGenesisState
+	DefaultGenesisState      = types.DefaultGenesisState
+	ValidateGenesis          = types.ValidateGenesis
 	NewMsgPrivateCreateEvent = types.NewMsgPrivateCreateEvent
 
 	// variable aliases
@@ -36,6 +33,5 @@ type (
 	GenesisState = types.GenesisState
 	Params       = types.Params
 
-	// TODO: Fill out module types
 	MsgPrivateCreateEvent = types.MsgPrivateCreateEvent
 )
