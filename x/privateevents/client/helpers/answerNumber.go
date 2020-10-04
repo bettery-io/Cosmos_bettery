@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/VoroshilovMax/Bettery/x/privateevents/types"
 	"github.com/cosmos/cosmos-sdk/client/context"
@@ -35,4 +36,8 @@ func IndexOf(haystack []string, needle string) int {
 		}
 	}
 	return -1
+}
+
+func CurrentEpochTime() int64 {
+	return time.Now().Unix()
 }

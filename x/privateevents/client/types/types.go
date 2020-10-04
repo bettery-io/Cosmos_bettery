@@ -17,7 +17,6 @@ type Participate struct {
 	BaseReq     rest.BaseReq `json:"base_req"`
 	Participant string       `json:"participant"`
 	Answer      string       `json:"answer"`
-	Date        uint         `json:"date"`
 	EventId     int          `json:"event_id"`
 }
 
@@ -25,6 +24,5 @@ type Validate struct {
 	BaseReq rest.BaseReq `json:"base_req"`
 	Expert  string       `json:"expert"`
 	Answer  string       `json:"answer"`
-	Date    uint         `json:"date"`
 	EventId int          `json:"event_id"`
 }

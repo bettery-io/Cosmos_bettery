@@ -1,7 +1,6 @@
 package rest
 
 import (
-	"fmt"
 	"net/http"
 
 	helpers "github.com/VoroshilovMax/Bettery/x/privateevents/client/helpers"
@@ -27,9 +26,9 @@ func registerTxRoutes(cliCtx context.CLIContext, r *mux.Router) {
 // 3 check if participate whant to participate send time
 // 4 check time for validator
 // 6 finish event when validator did his job
-// 7 add timer for event
 // 8 add final answer to the infoEvent struct
 // 9 add validator to the infoEvent struct
+// 10 build registration with DB
 
 func createPrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -113,11 +112,11 @@ func participatePrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
 			return
 		}
 
-		fmt.Println(answerNumber)
+		date := helpers.CurrentEpochTime()
 
 		msg := types.NewMsgPrivateEventParticipate(
 			req.Answer,
-			req.Date,
+			uint(date),
 			answerNumber,
 			participant,
 			validator,
@@ -164,11 +163,11 @@ func validatePrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
 			return
 		}
 
-		fmt.Println(answerNumber)
+		date := helpers.CurrentEpochTime()
 
 		msg := types.NewMsgPrivateEventValidate(
 			req.Answer,
-			req.Date,
+			uint(date),
 			answerNumber,
 			expert,
 			validator,
