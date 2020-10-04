@@ -83,3 +83,16 @@ func (s Validate) String() string {
 		s.EventId,
 	))
 }
+
+type EventInfo struct {
+	EventId      int            `json:"event_id"`
+	EndTime      uint           `json:"end_time"`
+	Question     string         `json:"question"`
+	Answers      []string       `json:"answers"`
+	Winner       string         `json:"winner"`
+	Loser        string         `json:"loser"`
+	Owner        sdk.AccAddress `json:"owner"`
+	FinalAnswer  string         `json:"final_answer"`
+	Participants []Participate  `json:"participants"`
+	Validator    Validate       `json:"validator"`
+}

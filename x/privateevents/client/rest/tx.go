@@ -26,8 +26,10 @@ func registerTxRoutes(cliCtx context.CLIContext, r *mux.Router) {
 // 2 check time to participate
 // 3 check if participate whant to participate send time
 // 4 check time for validator
-// 5 build better struct for get event
 // 6 finish event when validator did his job
+// 7 add timer for event
+// 8 add final answer to the infoEvent struct
+// 9 add validator to the infoEvent struct
 
 func createPrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -62,7 +64,7 @@ func createPrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
 
 		msg := types.NewMsgPrivateCreateEvent(
 			req.EventId,
-			req.StartTime,
+			req.EndTime,
 			req.Question,
 			req.Answers,
 			req.Winner,

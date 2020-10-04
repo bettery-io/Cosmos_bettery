@@ -31,7 +31,7 @@ func getEventById(cliCtx context.CLIContext) http.HandlerFunc {
 			return
 		}
 
-		var out types.CreateEvent
+		var out types.EventInfo
 		cliCtx.Codec.MustUnmarshalJSON(res, &out)
 		rest.PostProcessResponse(w, cliCtx, res)
 	}

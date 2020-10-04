@@ -1,8 +1,7 @@
 package keeper
 
 import (
-	//	"fmt"
-
+	"fmt"
 	"strconv"
 
 	abci "github.com/tendermint/tendermint/abci/types"
@@ -27,14 +26,38 @@ func NewQuerier(k Keeper) sdk.Querier {
 }
 
 func queryGetSinglePrivateEvent(ctx sdk.Context, path []string, k Keeper) (res []byte, sdkError error) {
+	var event types.EventInfo
 	eventId := path[0]
-	i, err := strconv.Atoi(eventId)
+	id, err := strconv.Atoi(eventId)
 	if err != nil {
 		return nil, err
 	}
-	event, err := k.GetPrivateEventById(ctx, i)
+	eventItself, err := k.GetPrivateEventById(ctx, id)
 	if err != nil {
 		return nil, err
+	}
+
+	event.Question = eventItself.Question
+	event.Answers = eventItself.Answers
+	event.EndTime = eventItself.EndTime
+	event.EventId = eventItself.EventId
+	event.Loser = eventItself.Loser
+	event.Winner = eventItself.Question
+	event.Owner = eventItself.Owner
+
+	event.FinalAnswer = "TO DO" // TO DO
+
+	participants := k.GetPartIteratorByEventId(ctx, id)
+
+	for ; participants.Valid(); participants.Next() {
+		partWallet := removePrefixFromHash(participants.Key(), []byte(types.ParticipantPrefix+strconv.Itoa(event.EventId)))
+		fmt.Println(string(partWallet))
+		part, err := k.getParticipantById(ctx, event.EventId, string(partWallet))
+		if err != nil {
+			return
+		}
+
+		event.Participants = append(event.Participants, part)
 	}
 
 	res, err = codec.MarshalJSONIndent(k.cdc, event)
@@ -43,4 +66,9 @@ func queryGetSinglePrivateEvent(ctx sdk.Context, path []string, k Keeper) (res [
 	}
 
 	return res, nil
+}
+
+func removePrefixFromHash(key []byte, prefix []byte) (hash []byte) {
+	hash = key[len(prefix):]
+	return hash
 }
