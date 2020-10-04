@@ -24,17 +24,17 @@ func NewHandler(k Keeper) sdk.Handler {
 
 func handelMsgPrivateCreateEvent(ctx sdk.Context, k Keeper, msg MsgPrivateCreateEvent) (*sdk.Result, error) {
 	var event = types.CreateEvent{
-		EventId:   msg.EventId,
-		StartTime: msg.StartTime,
-		Question:  msg.Question,
-		Answers:   msg.Answers,
-		Winner:    msg.Winner,
-		Loser:     msg.Loser,
-		Owner:     msg.Owner,
+		EventId:  msg.EventId,
+		EndTime:  msg.EndTime,
+		Question: msg.Question,
+		Answers:  msg.Answers,
+		Winner:   msg.Winner,
+		Loser:    msg.Loser,
+		Owner:    msg.Owner,
 	}
 	// error handel don't work
 
-	_, err := k.GetPrivateEvent(ctx, int(event.EventId))
+	_, err := k.GetPrivateEvent(ctx, event.EventId)
 	if err == nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Quiz already exists")
 	}

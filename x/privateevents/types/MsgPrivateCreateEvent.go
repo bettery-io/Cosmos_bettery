@@ -8,8 +8,8 @@ import (
 var _ sdk.Msg = &MsgPrivateCreateEvent{}
 
 type MsgPrivateCreateEvent struct {
-	EventId   uint           `json:"event_id"`
-	StartTime uint           `json:"start_time"`
+	EventId   int            `json:"event_id"`
+	EndTime   uint           `json:"end_time"`
 	Question  string         `json:"question"`
 	Answers   []string       `json:"answers"`
 	Winner    string         `json:"winner"`
@@ -20,8 +20,8 @@ type MsgPrivateCreateEvent struct {
 
 // NewMsgCreateEvent creates a new MsgPrivateCreateEvent instance
 func NewMsgPrivateCreateEvent(
-	_eventId uint,
-	_startTime uint,
+	_eventId int,
+	_endTime uint,
 	_question string,
 	_answers []string,
 	_winner string,
@@ -31,7 +31,7 @@ func NewMsgPrivateCreateEvent(
 ) MsgPrivateCreateEvent {
 	return MsgPrivateCreateEvent{
 		EventId:   _eventId,
-		StartTime: _startTime,
+		EndTime:   _endTime,
 		Question:  _question,
 		Answers:   _answers,
 		Winner:    _winner,
@@ -59,8 +59,8 @@ func (msg MsgPrivateCreateEvent) ValidateBasic() error {
 	if msg.EventId == 0 {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "event id can't be empty")
 	}
-	if msg.StartTime == 0 {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "start time can't be empty")
+	if msg.EndTime == 0 {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "end time can't be empty")
 	}
 	if len(msg.Question) == 0 {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "question can't be empty")

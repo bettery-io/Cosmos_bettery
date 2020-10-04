@@ -16,13 +16,15 @@ const (
 
 var (
 	// functions aliases
-	NewKeeper                = keeper.NewKeeper
-	NewQuerier               = keeper.NewQuerier
-	RegisterCodec            = types.RegisterCodec
-	NewGenesisState          = types.NewGenesisState
-	DefaultGenesisState      = types.DefaultGenesisState
-	ValidateGenesis          = types.ValidateGenesis
-	NewMsgPrivateCreateEvent = types.NewMsgPrivateCreateEvent
+	NewKeeper                     = keeper.NewKeeper
+	NewQuerier                    = keeper.NewQuerier
+	RegisterCodec                 = types.RegisterCodec
+	NewGenesisState               = types.NewGenesisState
+	DefaultGenesisState           = types.DefaultGenesisState
+	ValidateGenesis               = types.ValidateGenesis
+	NewMsgPrivateCreateEvent      = types.NewMsgPrivateCreateEvent
+	NewMsgPrivateEventParticipate = types.NewMsgPrivateEventParticipate
+	NewMsgPrivateEventValidate    = types.NewMsgPrivateEventValidate
 
 	// variable aliases
 	ModuleCdc = types.ModuleCdc
@@ -33,5 +35,7 @@ type (
 	GenesisState = types.GenesisState
 	Params       = types.Params
 
-	MsgPrivateCreateEvent = types.MsgPrivateCreateEvent
+	MsgPrivateCreateEvent      = types.MsgPrivateCreateEvent
+	MsgPrivateEventParticipate = types.MsgPrivateEventParticipate
+	MsgPrivateEventValidate    = types.MsgPrivateEventValidate
 )
