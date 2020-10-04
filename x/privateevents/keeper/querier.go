@@ -3,6 +3,8 @@ package keeper
 import (
 	//	"fmt"
 
+	"strconv"
+
 	abci "github.com/tendermint/tendermint/abci/types"
 
 	//	"github.com/cosmos/cosmos-sdk/client"
@@ -26,7 +28,11 @@ func NewQuerier(k Keeper) sdk.Querier {
 
 func queryGetSinglePrivateEvent(ctx sdk.Context, path []string, k Keeper) (res []byte, sdkError error) {
 	eventId := path[0]
-	event, err := k.GetPrivateEvent(ctx, eventId)
+	i, err := strconv.Atoi(eventId)
+	if err != nil {
+		return nil, err
+	}
+	event, err := k.GetPrivateEvent(ctx, i)
 	if err != nil {
 		return nil, err
 	}

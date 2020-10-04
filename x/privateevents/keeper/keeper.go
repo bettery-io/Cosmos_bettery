@@ -34,11 +34,11 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 }
 
 // Get returns the pubkey from the adddress-pubkey relation
-func (k Keeper) GetPrivateEvent(ctx sdk.Context, eventId string) (types.CreateEvent, error) {
+func (k Keeper) GetPrivateEvent(ctx sdk.Context, eventId int) (types.CreateEvent, error) {
 	store := ctx.KVStore(k.storeKey)
 	var event types.CreateEvent
-	byteKey := []byte(eventId)
-	err := k.cdc.UnmarshalBinaryLengthPrefixed(store.Get(byteKey), &event)
+	key := []byte(types.EventPrefix + strconv.Itoa(int(eventId)))
+	err := k.cdc.UnmarshalBinaryLengthPrefixed(store.Get(key), &event)
 	if err != nil {
 		return event, err
 	}
