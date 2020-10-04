@@ -15,7 +15,6 @@ func registerQueryRoutes(cliCtx context.CLIContext, r *mux.Router) {
 	r.HandleFunc("/privateevents/{id}", getEventById(cliCtx)).Methods("GET")
 }
 
-// TODO: Make better structure for single event with all participant and validators
 func getEventById(cliCtx context.CLIContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 

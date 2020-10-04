@@ -41,3 +41,45 @@ func (s CreateEvent) String() string {
 		s.Owner,
 	))
 }
+
+type Participate struct {
+	Participant sdk.AccAddress `json:"participant"`
+	Answer      string         `json:"answer"`
+	Date        uint           `json:"date"`
+	EventId     int            `json:"event_id"`
+}
+
+func (s Participate) String() string {
+	return strings.TrimSpace(fmt.Sprintf(
+		`Participant: %v
+		Answer: %v
+		Date: %v
+		EventId: %v
+	`,
+		s.Participant,
+		s.Answer,
+		s.Date,
+		s.EventId,
+	))
+}
+
+type Validate struct {
+	Expert  sdk.AccAddress `json:"expert"`
+	Answer  string         `json:"answer"`
+	Date    uint           `json:"date"`
+	EventId int            `json:"event_id"`
+}
+
+func (s Validate) String() string {
+	return strings.TrimSpace(fmt.Sprintf(
+		`Expert: %v
+		Answer: %v
+		Date: %v
+		EventId: %v
+	`,
+		s.Expert,
+		s.Answer,
+		s.Date,
+		s.EventId,
+	))
+}

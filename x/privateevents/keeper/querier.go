@@ -32,7 +32,7 @@ func queryGetSinglePrivateEvent(ctx sdk.Context, path []string, k Keeper) (res [
 	if err != nil {
 		return nil, err
 	}
-	event, err := k.GetPrivateEvent(ctx, i)
+	event, err := k.GetPrivateEventById(ctx, i)
 	if err != nil {
 		return nil, err
 	}

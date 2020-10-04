@@ -15,6 +15,10 @@ func NewHandler(k Keeper) sdk.Handler {
 		switch msg := msg.(type) {
 		case MsgPrivateCreateEvent:
 			return handelMsgPrivateCreateEvent(ctx, k, msg)
+		case MsgPrivateEventParticipate:
+			return handelMsgPrivateEventParticipate(ctx, k, msg)
+		case MsgPrivateEventValidate:
+			return handelMsgPrivateEventValidate(ctx, k, msg)
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", ModuleName, msg)
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)
@@ -32,35 +36,36 @@ func handelMsgPrivateCreateEvent(ctx sdk.Context, k Keeper, msg MsgPrivateCreate
 		Loser:    msg.Loser,
 		Owner:    msg.Owner,
 	}
-	// error handel don't work
 
-	_, err := k.GetPrivateEvent(ctx, event.EventId)
-	if err == nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Quiz already exists")
-	}
 	k.SetPrivateEvent(ctx, event)
 
-	// ctx.EventManager().EmitEvents(sdk.Events{
-	// 	sdk.NewEvent(
-	// 		sdk.EventTypeMessage,
-	// 		sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
-	// 	sdk.NewAttribute(sdk.AttributeKeySender, msg.ValidatorAddress.String()),
-	// ),
-	// sdk.NewEvent(
-	// 	types.EventTypeCreateClaim,
-	// 	sdk.NewAttribute(types.AttributeKeyEthereumSender, msg.EthereumSender.String()),
-	// 	sdk.NewAttribute(types.AttributeKeyCosmosReceiver, msg.CosmosReceiver.String()),
-	// 	sdk.NewAttribute(types.AttributeKeyAmount, strconv.FormatInt(msg.Amount, 10)),
-	// 	sdk.NewAttribute(types.AttributeKeySymbol, msg.Symbol),
-	// 	sdk.NewAttribute(types.AttributeKeyTokenContract, msg.TokenContractAddress.String()),
-	// 	sdk.NewAttribute(types.AttributeKeyClaimType, msg.ClaimType.String()),
-	// ),
-	// sdk.NewEvent(
-	// 	types.EventTypeProphecyStatus,
-	// 	sdk.NewAttribute(types.AttributeKeyStatus, status.Text.String()),
-	//		),
-	//	})
-
-	//return &sdk.Result{Events: ctx.EventManager().Events()}, nil
 	return &sdk.Result{}, nil
+}
+
+func handelMsgPrivateEventParticipate(ctx sdk.Context, k Keeper, msg MsgPrivateEventParticipate) (*sdk.Result, error) {
+	var part = types.Participate{
+		Participant: msg.Participant,
+		Answer:      msg.Answer,
+		Date:        msg.Date,
+		EventId:     msg.EventId,
+	}
+
+	k.Participate(ctx, part)
+
+	return &sdk.Result{}, nil
+}
+
+func handelMsgPrivateEventValidate(ctx sdk.Context, k Keeper, msg MsgPrivateEventValidate) (*sdk.Result, error) {
+
+	var valid = types.Validate{
+		Expert:  msg.Expert,
+		Answer:  msg.Answer,
+		Date:    msg.Date,
+		EventId: msg.EventId,
+	}
+
+	k.Validate(ctx, valid)
+
+	return &sdk.Result{}, nil
+
 }

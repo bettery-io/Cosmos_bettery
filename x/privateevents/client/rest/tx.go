@@ -21,6 +21,14 @@ func registerTxRoutes(cliCtx context.CLIContext, r *mux.Router) {
 	r.HandleFunc("/privateevent/validate", validatePrivateEvent(cliCtx)).Methods("POST")
 }
 
+// TO DO
+// 1 check if exist event when create new event
+// 2 check time to participate
+// 3 check if participate whant to participate send time
+// 4 check time for validator
+// 5 build better struct for get event
+// 6 finish event when validator did his job
+
 func createPrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req restTypes.CreateEvent
@@ -46,6 +54,11 @@ func createPrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
 			return
 		}
+
+		// _, err := k.GetPrivateEventById(ctx, event.EventId)
+		// if err == nil {
+		// 	return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Quiz already exists")
+		// }
 
 		msg := types.NewMsgPrivateCreateEvent(
 			req.EventId,

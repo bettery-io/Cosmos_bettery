@@ -34,7 +34,7 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 }
 
 // Get returns the pubkey from the adddress-pubkey relation
-func (k Keeper) GetPrivateEvent(ctx sdk.Context, eventId int) (types.CreateEvent, error) {
+func (k Keeper) GetPrivateEventById(ctx sdk.Context, eventId int) (types.CreateEvent, error) {
 	store := ctx.KVStore(k.storeKey)
 	var event types.CreateEvent
 	key := []byte(types.EventPrefix + strconv.Itoa(int(eventId)))
@@ -53,7 +53,52 @@ func (k Keeper) SetPrivateEvent(ctx sdk.Context, event types.CreateEvent) {
 	store.Set([]byte(key), bz)
 }
 
-// func (k Keeper) delete(ctx sdk.Context, key string) {
-// 	store := ctx.KVStore(k.storeKey)
-// 	store.Delete([]byte(key))
-// }
+func (k Keeper) Participate(ctx sdk.Context, event types.Participate) {
+	keys := event.Participant.String()
+	eventId := strconv.Itoa(int(event.EventId))
+	store := ctx.KVStore(k.storeKey)
+	bz := k.cdc.MustMarshalBinaryLengthPrefixed(event)
+	key := []byte(types.ParticipantPrefix + eventId + keys)
+	store.Set(key, bz)
+}
+
+func (k Keeper) getParticipantById(ctx sdk.Context, eventId string, partWallet string) (types.Participate, error) {
+	store := ctx.KVStore(k.storeKey)
+	var patr types.Participate
+	byteKey := []byte(types.ParticipantPrefix + eventId + partWallet)
+	err := k.cdc.UnmarshalBinaryLengthPrefixed(store.Get(byteKey), &patr)
+	if err != nil {
+		return patr, err
+	}
+	return patr, nil
+}
+
+func (k Keeper) GetPartIteratorByEventId(ctx sdk.Context, eventId string) sdk.Iterator {
+	store := ctx.KVStore(k.storeKey)
+	return sdk.KVStorePrefixIterator(store, []byte(types.ParticipantPrefix+eventId))
+}
+
+func (k Keeper) Validate(ctx sdk.Context, event types.Validate) {
+	keys := event.Expert.String()
+	eventId := strconv.Itoa(int(event.EventId))
+	store := ctx.KVStore(k.storeKey)
+	bz := k.cdc.MustMarshalBinaryLengthPrefixed(event)
+	key := []byte(types.ValidatorPrefix + eventId + keys)
+	store.Set(key, bz)
+}
+
+func (k Keeper) getValidatorById(ctx sdk.Context, eventId string, validWallet string) (types.Validate, error) {
+	store := ctx.KVStore(k.storeKey)
+	var valid types.Validate
+	byteKey := []byte(types.ValidatorPrefix + eventId + validWallet)
+	err := k.cdc.UnmarshalBinaryLengthPrefixed(store.Get(byteKey), &valid)
+	if err != nil {
+		return valid, err
+	}
+	return valid, nil
+}
+
+func (k Keeper) GetValidIteratorByEventId(ctx sdk.Context, eventId string) sdk.Iterator {
+	store := ctx.KVStore(k.storeKey)
+	return sdk.KVStorePrefixIterator(store, []byte(types.ValidatorPrefix+eventId))
+}
