@@ -8,7 +8,7 @@ const createEvent = async (req, res) => {
     let send = await axios.post(path.path + '/privateevent/create', req.body, config.header
     ).catch((err) => {
         res.status(400);
-        res.send(err.response.data.error);
+        res.send(err.response.data);
     })
 
     if (send) {
@@ -24,7 +24,7 @@ const createEvent = async (req, res) => {
         let txs = await axios.post(path.path + '/txs', sendTxs, config.header
         ).catch((err) => {
             res.status(400);
-            res.send(err.response.data.error);
+            res.send(err.response.data);
         })
         if (txs) {
             res.status(200);

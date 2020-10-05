@@ -21,9 +21,7 @@ func registerTxRoutes(cliCtx context.CLIContext, r *mux.Router) {
 }
 
 // TO DO
-// 1 check if exist event when create new event
 // 2 check time to participate
-// 3 check if participate whant to participate send time
 // 4 check time for validator
 // 6 finish event when validator did his job
 // 8 add final answer to the infoEvent struct
@@ -56,10 +54,11 @@ func createPrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
 			return
 		}
 
-		// _, err := k.GetPrivateEventById(ctx, event.EventId)
-		// if err == nil {
-		// 	return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Quiz already exists")
-		// }
+		eventAlreadyExist := helpers.CheckIfEventExist(req.EventId, w, r, cliCtx)
+		if eventAlreadyExist {
+			rest.WriteErrorResponse(w, http.StatusBadRequest, "Event with this id already exist")
+			return
+		}
 
 		msg := types.NewMsgPrivateCreateEvent(
 			req.EventId,

@@ -8,7 +8,7 @@ const getEventById = async (req, res) => {
     ).catch((err) => {
         console.log(err.response.data)
         res.status(400);
-        res.send(err.response.data.error);
+        res.send(err.response.data);
     })
     if (send) {
         res.status(200);
