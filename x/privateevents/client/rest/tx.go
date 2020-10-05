@@ -22,10 +22,11 @@ func registerTxRoutes(cliCtx context.CLIContext, r *mux.Router) {
 
 // TO DO
 // 2 check time to participate
+// 3 check if participant already participate
 // 4 check time for validator
+// 5 check if answer is exist
 // 6 finish event when validator did his job
-// 8 add final answer to the infoEvent struct
-// 9 add validator to the infoEvent struct
+// 7 BUG when I sen first answer like paricipant
 // 10 build registration with DB
 
 func createPrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
@@ -153,6 +154,12 @@ func validatePrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
 		validator, err := sdk.AccAddressFromBech32(req.BaseReq.From)
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+			return
+		}
+
+		answerIsKnown := helpers.AnswerIsKnown(req.EventId, w, r, cliCtx)
+		if answerIsKnown {
+			rest.WriteErrorResponse(w, http.StatusBadRequest, "Event is finish. Answer is alredy provided")
 			return
 		}
 

@@ -1,7 +1,6 @@
 package keeper
 
 import (
-	"fmt"
 	"strconv"
 
 	abci "github.com/tendermint/tendermint/abci/types"
@@ -45,19 +44,34 @@ func queryGetSinglePrivateEvent(ctx sdk.Context, path []string, k Keeper) (res [
 	event.Winner = eventItself.Question
 	event.Owner = eventItself.Owner
 
-	event.FinalAnswer = "TO DO" // TO DO
+	finalAnswer, err := k.GetFinalAnswer(ctx, id)
+	if err == nil {
+		event.FinalAnswer = finalAnswer.FinalAnswer
+		event.FinalAnswerNumber = finalAnswer.FinalAnswerNumber
+	} else {
+		event.FinalAnswer = "undefined"
+	}
 
 	participants := k.GetPartIteratorByEventId(ctx, id)
 
 	for ; participants.Valid(); participants.Next() {
 		partWallet := removePrefixFromHash(participants.Key(), []byte(types.ParticipantPrefix+strconv.Itoa(event.EventId)))
-		fmt.Println(string(partWallet))
 		part, err := k.getParticipantById(ctx, event.EventId, string(partWallet))
 		if err != nil {
 			return
 		}
-
 		event.Participants = append(event.Participants, part)
+	}
+
+	validators := k.GetValidIteratorByEventId(ctx, id)
+
+	for ; validators.Valid(); validators.Next() {
+		validWallet := removePrefixFromHash(validators.Key(), []byte(types.ValidatorPrefix+strconv.Itoa(event.EventId)))
+		valid, err := k.getValidatorById(ctx, event.EventId, string(validWallet))
+		if err != nil {
+			return
+		}
+		event.Validator = append(event.Validator, valid)
 	}
 
 	res, err = codec.MarshalJSONIndent(k.cdc, event)

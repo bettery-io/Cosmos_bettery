@@ -12,16 +12,9 @@ import (
 )
 
 func GetAnswerNumber(EventId int, Answer string, w http.ResponseWriter, r *http.Request, cliCtx context.CLIContext) int {
-	eventId := strconv.FormatUint(uint64(EventId), 10)
-
-	cliCtx, ok := rest.ParseQueryHeightOrReturnBadRequest(w, cliCtx, r)
-	if !ok {
-		rest.WriteErrorResponse(w, http.StatusNotFound, "ParseQueryHeightOrReturnBadRequest")
-	}
-
-	res, _, err := cliCtx.QueryWithData(fmt.Sprintf("custom/%s/%s/%s", types.QuerierRoute, types.QueryGetSinglePrivateEvent, eventId), nil)
+	res, _, err := getEvent(EventId, w, r, cliCtx)
 	if err != nil {
-		rest.WriteErrorResponse(w, http.StatusNotFound, "could not resolve quiz by id: "+eventId+" ,"+err.Error())
+		rest.WriteErrorResponse(w, http.StatusNotFound, "could not resolve event by id: "+strconv.FormatUint(uint64(EventId), 10)+" ,"+err.Error())
 	}
 
 	var event types.CreateEvent
@@ -30,6 +23,29 @@ func GetAnswerNumber(EventId int, Answer string, w http.ResponseWriter, r *http.
 }
 
 func CheckIfEventExist(EventId int, w http.ResponseWriter, r *http.Request, cliCtx context.CLIContext) bool {
+	_, _, err := getEvent(EventId, w, r, cliCtx)
+	if err != nil {
+		return false
+	} else {
+		return true
+	}
+}
+
+func AnswerIsKnown(EventId int, w http.ResponseWriter, r *http.Request, cliCtx context.CLIContext) bool {
+	res, _, err := getEvent(EventId, w, r, cliCtx)
+	if err != nil {
+		rest.WriteErrorResponse(w, http.StatusNotFound, "could not resolve event by id: "+strconv.FormatUint(uint64(EventId), 10)+" ,"+err.Error())
+	}
+	var event types.EventInfo
+	cliCtx.Codec.MustUnmarshalJSON(res, &event)
+	if event.FinalAnswer == "undefined" {
+		return false
+	} else {
+		return true
+	}
+}
+
+func getEvent(EventId int, w http.ResponseWriter, r *http.Request, cliCtx context.CLIContext) ([]byte, int64, error) {
 	eventId := strconv.FormatUint(uint64(EventId), 10)
 
 	cliCtx, ok := rest.ParseQueryHeightOrReturnBadRequest(w, cliCtx, r)
@@ -37,12 +53,7 @@ func CheckIfEventExist(EventId int, w http.ResponseWriter, r *http.Request, cliC
 		rest.WriteErrorResponse(w, http.StatusNotFound, "ParseQueryHeightOrReturnBadRequest")
 	}
 
-	_, _, err := cliCtx.QueryWithData(fmt.Sprintf("custom/%s/%s/%s", types.QuerierRoute, types.QueryGetSinglePrivateEvent, eventId), nil)
-	if err != nil {
-		return false
-	} else {
-		return true
-	}
+	return cliCtx.QueryWithData(fmt.Sprintf("custom/%s/%s/%s", types.QuerierRoute, types.QueryGetSinglePrivateEvent, eventId), nil)
 }
 
 func IndexOf(haystack []string, needle string) int {

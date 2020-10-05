@@ -102,3 +102,22 @@ func (k Keeper) GetValidIteratorByEventId(ctx sdk.Context, eventId int) sdk.Iter
 	store := ctx.KVStore(k.storeKey)
 	return sdk.KVStorePrefixIterator(store, []byte(types.ValidatorPrefix+strconv.Itoa(eventId)))
 }
+
+func (k Keeper) SetFinalAnswer(ctx sdk.Context, finalAnswer types.FinalAnswer) {
+	eventId := strconv.Itoa(finalAnswer.EventId)
+	store := ctx.KVStore(k.storeKey)
+	bz := k.cdc.MustMarshalBinaryLengthPrefixed(finalAnswer)
+	key := []byte(types.FinalAnswerPrefix + eventId)
+	store.Set(key, bz)
+}
+
+func (k Keeper) GetFinalAnswer(ctx sdk.Context, eventId int) (types.FinalAnswer, error) {
+	store := ctx.KVStore(k.storeKey)
+	var event types.FinalAnswer
+	key := []byte(types.FinalAnswerPrefix + strconv.Itoa(eventId))
+	err := k.cdc.UnmarshalBinaryLengthPrefixed(store.Get(key), &event)
+	if err != nil {
+		return event, err
+	}
+	return event, nil
+}

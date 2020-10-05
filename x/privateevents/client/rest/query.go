@@ -26,7 +26,7 @@ func getEventById(cliCtx context.CLIContext) http.HandlerFunc {
 
 		res, _, err := cliCtx.QueryWithData(fmt.Sprintf("custom/%s/%s/%s", types.QuerierRoute, types.QueryGetSinglePrivateEvent, eventId), nil)
 		if err != nil {
-			rest.WriteErrorResponse(w, http.StatusNotFound, "could not resolve quiz by id: "+eventId+" ,"+err.Error())
+			rest.WriteErrorResponse(w, http.StatusNotFound, "could not resolve event by id: "+eventId+" ,"+err.Error())
 			fmt.Printf("could not resolve quiz %s \n%s\n", eventId, err.Error())
 			return
 		}

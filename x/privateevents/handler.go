@@ -44,10 +44,11 @@ func handelMsgPrivateCreateEvent(ctx sdk.Context, k Keeper, msg MsgPrivateCreate
 
 func handelMsgPrivateEventParticipate(ctx sdk.Context, k Keeper, msg MsgPrivateEventParticipate) (*sdk.Result, error) {
 	var part = types.Participate{
-		Participant: msg.Participant,
-		Answer:      msg.Answer,
-		Date:        msg.Date,
-		EventId:     msg.EventId,
+		Participant:  msg.Participant,
+		Answer:       msg.Answer,
+		AnswerNumber: msg.AnswerNumber,
+		Date:         msg.Date,
+		EventId:      msg.EventId,
 	}
 
 	k.Participate(ctx, part)
@@ -58,13 +59,21 @@ func handelMsgPrivateEventParticipate(ctx sdk.Context, k Keeper, msg MsgPrivateE
 func handelMsgPrivateEventValidate(ctx sdk.Context, k Keeper, msg MsgPrivateEventValidate) (*sdk.Result, error) {
 
 	var valid = types.Validate{
-		Expert:  msg.Expert,
-		Answer:  msg.Answer,
-		Date:    msg.Date,
-		EventId: msg.EventId,
+		Expert:       msg.Expert,
+		Answer:       msg.Answer,
+		AnswerNumber: msg.AnswerNumber,
+		Date:         msg.Date,
+		EventId:      msg.EventId,
 	}
 
 	k.Validate(ctx, valid)
+
+	var finalAnswer = types.FinalAnswer{
+		EventId:           msg.EventId,
+		FinalAnswer:       msg.Answer,
+		FinalAnswerNumber: msg.AnswerNumber,
+	}
+	k.SetFinalAnswer(ctx, finalAnswer)
 
 	return &sdk.Result{}, nil
 

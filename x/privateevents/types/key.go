@@ -17,4 +17,5 @@ const (
 	ParticipantPrefix = "partPrivateEvent-"
 	ValidatorPrefix   = "validPrivateEvent-"
 	EventStatusPrefix = "privateEventStatus-"
+	FinalAnswerPrefix = "finalAnswerPrefix-"
 )

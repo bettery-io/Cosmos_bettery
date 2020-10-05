@@ -43,10 +43,11 @@ func (s CreateEvent) String() string {
 }
 
 type Participate struct {
-	Participant sdk.AccAddress `json:"participant"`
-	Answer      string         `json:"answer"`
-	Date        uint           `json:"date"`
-	EventId     int            `json:"event_id"`
+	Participant  sdk.AccAddress `json:"participant"`
+	Answer       string         `json:"answer"`
+	AnswerNumber int            `json:"answer_number"`
+	Date         uint           `json:"date"`
+	EventId      int            `json:"event_id"`
 }
 
 func (s Participate) String() string {
@@ -64,10 +65,11 @@ func (s Participate) String() string {
 }
 
 type Validate struct {
-	Expert  sdk.AccAddress `json:"expert"`
-	Answer  string         `json:"answer"`
-	Date    uint           `json:"date"`
-	EventId int            `json:"event_id"`
+	Expert       sdk.AccAddress `json:"expert"`
+	Answer       string         `json:"answer"`
+	AnswerNumber int            `json:"answer_number"`
+	Date         uint           `json:"date"`
+	EventId      int            `json:"event_id"`
 }
 
 func (s Validate) String() string {
@@ -85,14 +87,21 @@ func (s Validate) String() string {
 }
 
 type EventInfo struct {
-	EventId      int            `json:"event_id"`
-	EndTime      uint           `json:"end_time"`
-	Question     string         `json:"question"`
-	Answers      []string       `json:"answers"`
-	Winner       string         `json:"winner"`
-	Loser        string         `json:"loser"`
-	Owner        sdk.AccAddress `json:"owner"`
-	FinalAnswer  string         `json:"final_answer"`
-	Participants []Participate  `json:"participants"`
-	Validator    Validate       `json:"validator"`
+	EventId           int            `json:"event_id"`
+	EndTime           uint           `json:"end_time"`
+	Question          string         `json:"question"`
+	Answers           []string       `json:"answers"`
+	Winner            string         `json:"winner"`
+	Loser             string         `json:"loser"`
+	Owner             sdk.AccAddress `json:"owner"`
+	FinalAnswer       string         `json:"final_answer"`
+	FinalAnswerNumber int            `json:"final_answer_number"`
+	Participants      []Participate  `json:"participants"`
+	Validator         []Validate     `json:"validator"`
+}
+
+type FinalAnswer struct {
+	EventId           int    `json:"event_id"`
+	FinalAnswer       string `json:"final_answer"`
+	FinalAnswerNumber int    `json:"final_answer_number"`
 }
