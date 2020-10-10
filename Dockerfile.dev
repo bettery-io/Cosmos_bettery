@@ -1,0 +1,7 @@
+FROM golang:1.14
+WORKDIR /go/src/app
+COPY . .
+RUN sh ./init.sh
+RUN make
+EXPOSE 26657 1317
+CMD ["betteryd"]

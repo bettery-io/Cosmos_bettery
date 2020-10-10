@@ -24,7 +24,6 @@ func registerTxRoutes(cliCtx context.CLIContext, r *mux.Router) {
 // 2 check time to participate
 // 3 check if participant already participate
 // 4 check time for validator
-// 5 check if answer is exist
 // 6 finish event when validator did his job
 // 7 BUG when I sen first answer like paricipant
 // 10 build registration with DB

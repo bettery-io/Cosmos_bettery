@@ -2,6 +2,7 @@ package privateevents
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/VoroshilovMax/Bettery/x/privateevents/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -75,6 +76,16 @@ func handelMsgPrivateEventValidate(ctx sdk.Context, k Keeper, msg MsgPrivateEven
 	}
 	k.SetFinalAnswer(ctx, finalAnswer)
 
-	return &sdk.Result{}, nil
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.TypeEventFinish,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+			sdk.NewAttribute(types.AttributePrivateEventId, strconv.Itoa(msg.EventId)),
+			sdk.NewAttribute(types.AttributePrivateEventFinalAnswer, msg.Answer),
+			sdk.NewAttribute(types.AttributePrivateEventFinalAnswerNumber, strconv.Itoa(msg.AnswerNumber)),
+		),
+	)
+
+	return &sdk.Result{Events: ctx.EventManager().Events()}, nil
 
 }
