@@ -10,19 +10,16 @@ type CreateEvent struct {
 	Answers  []string     `json:"answers"`
 	Winner   string       `json:"winner"`
 	Loser    string       `json:"loser"`
-	Owner    string       `json:"owner"`
 }
 
 type Participate struct {
-	BaseReq     rest.BaseReq `json:"base_req"`
-	Participant string       `json:"participant"`
-	Answer      string       `json:"answer"`
-	EventId     int          `json:"event_id"`
+	BaseReq rest.BaseReq `json:"base_req"`
+	Answer  string       `json:"answer"`
+	EventId int          `json:"event_id"`
 }
 
 type Validate struct {
 	BaseReq rest.BaseReq `json:"base_req"`
-	Expert  string       `json:"expert"`
 	Answer  string       `json:"answer"`
 	EventId int          `json:"event_id"`
 }

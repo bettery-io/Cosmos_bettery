@@ -42,13 +42,7 @@ func createPrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
 			return
 		}
 
-		onwer, err := sdk.AccAddressFromBech32(req.Owner)
-		if err != nil {
-			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
-			return
-		}
-
-		validator, err := sdk.AccAddressFromBech32(req.BaseReq.From)
+		owner, err := sdk.AccAddressFromBech32(req.BaseReq.From)
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
 			return
@@ -67,8 +61,7 @@ func createPrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
 			req.Answers,
 			req.Winner,
 			req.Loser,
-			onwer,
-			validator,
+			owner,
 		)
 		err = msg.ValidateBasic()
 		if err != nil {
@@ -93,13 +86,7 @@ func participatePrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
 			return
 		}
 
-		participant, err := sdk.AccAddressFromBech32(req.Participant)
-		if err != nil {
-			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
-			return
-		}
-
-		validator, err := sdk.AccAddressFromBech32(req.BaseReq.From)
+		participant, err := sdk.AccAddressFromBech32(req.BaseReq.From)
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
 			return
@@ -118,7 +105,6 @@ func participatePrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
 			uint(date),
 			answerNumber,
 			participant,
-			validator,
 			req.EventId,
 		)
 		err = msg.ValidateBasic()
@@ -144,13 +130,7 @@ func validatePrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
 			return
 		}
 
-		expert, err := sdk.AccAddressFromBech32(req.Expert)
-		if err != nil {
-			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
-			return
-		}
-
-		validator, err := sdk.AccAddressFromBech32(req.BaseReq.From)
+		expert, err := sdk.AccAddressFromBech32(req.BaseReq.From)
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
 			return
@@ -175,7 +155,6 @@ func validatePrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
 			uint(date),
 			answerNumber,
 			expert,
-			validator,
 			req.EventId,
 		)
 		err = msg.ValidateBasic()

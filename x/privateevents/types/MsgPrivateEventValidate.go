@@ -12,7 +12,6 @@ type MsgPrivateEventValidate struct {
 	Date         uint           `json:"date"`
 	AnswerNumber int            `json:"answerNumber"`
 	Expert       sdk.AccAddress `json:"expert"`
-	Validator    sdk.AccAddress `json:"validator"`
 	EventId      int            `json:"event_id"`
 }
 
@@ -22,7 +21,6 @@ func NewMsgPrivateEventValidate(
 	_date uint,
 	_answerNumber int,
 	_expert sdk.AccAddress,
-	_validator sdk.AccAddress,
 	_eventId int,
 ) MsgPrivateEventValidate {
 	return MsgPrivateEventValidate{
@@ -30,7 +28,6 @@ func NewMsgPrivateEventValidate(
 		Date:         _date,
 		AnswerNumber: _answerNumber,
 		Expert:       _expert,
-		Validator:    _validator,
 		EventId:      _eventId,
 	}
 }
@@ -41,7 +38,7 @@ const PrivateEventValidateConst = "PrivateEventValidate"
 func (msg MsgPrivateEventValidate) Route() string { return RouterKey }
 func (msg MsgPrivateEventValidate) Type() string  { return PrivateEventValidateConst }
 func (msg MsgPrivateEventValidate) GetSigners() []sdk.AccAddress {
-	return []sdk.AccAddress{sdk.AccAddress(msg.Validator)}
+	return []sdk.AccAddress{sdk.AccAddress(msg.Expert)}
 }
 
 // GetSignBytes gets the bytes for the message signer to sign on
@@ -61,9 +58,6 @@ func (msg MsgPrivateEventValidate) ValidateBasic() error {
 	}
 	if msg.Expert.Empty() {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "address expert can't be empty")
-	}
-	if msg.Validator.Empty() {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "address validator can't be empty")
 	}
 	if msg.EventId == 0 {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "event id can't be empty")

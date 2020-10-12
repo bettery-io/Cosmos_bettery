@@ -8,14 +8,13 @@ import (
 var _ sdk.Msg = &MsgPrivateCreateEvent{}
 
 type MsgPrivateCreateEvent struct {
-	EventId   int            `json:"event_id"`
-	EndTime   uint           `json:"end_time"`
-	Question  string         `json:"question"`
-	Answers   []string       `json:"answers"`
-	Winner    string         `json:"winner"`
-	Loser     string         `json:"loser"`
-	Owner     sdk.AccAddress `json:"owner"`
-	Validator sdk.AccAddress `json:"validator"`
+	EventId  int            `json:"event_id"`
+	EndTime  uint           `json:"end_time"`
+	Question string         `json:"question"`
+	Answers  []string       `json:"answers"`
+	Winner   string         `json:"winner"`
+	Loser    string         `json:"loser"`
+	Owner    sdk.AccAddress `json:"owner"`
 }
 
 // NewMsgCreateEvent creates a new MsgPrivateCreateEvent instance
@@ -27,17 +26,15 @@ func NewMsgPrivateCreateEvent(
 	_winner string,
 	_loser string,
 	_owner sdk.AccAddress,
-	_validator sdk.AccAddress,
 ) MsgPrivateCreateEvent {
 	return MsgPrivateCreateEvent{
-		EventId:   _eventId,
-		EndTime:   _endTime,
-		Question:  _question,
-		Answers:   _answers,
-		Winner:    _winner,
-		Loser:     _loser,
-		Owner:     _owner,
-		Validator: _validator,
+		EventId:  _eventId,
+		EndTime:  _endTime,
+		Question: _question,
+		Answers:  _answers,
+		Winner:   _winner,
+		Loser:    _loser,
+		Owner:    _owner,
 	}
 }
 
@@ -47,7 +44,7 @@ const CreatePrivateEventConst = "CreatePrivateEvent"
 func (msg MsgPrivateCreateEvent) Route() string { return RouterKey }
 func (msg MsgPrivateCreateEvent) Type() string  { return CreatePrivateEventConst }
 func (msg MsgPrivateCreateEvent) GetSigners() []sdk.AccAddress {
-	return []sdk.AccAddress{sdk.AccAddress(msg.Validator)}
+	return []sdk.AccAddress{sdk.AccAddress(msg.Owner)}
 }
 
 // GetSignBytes gets the bytes for the message signer to sign on
@@ -76,9 +73,6 @@ func (msg MsgPrivateCreateEvent) ValidateBasic() error {
 	}
 	if msg.Owner.Empty() {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "address owner can't be empty")
-	}
-	if msg.Validator.Empty() {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "address validator can't be empty")
 	}
 	return nil
 }
