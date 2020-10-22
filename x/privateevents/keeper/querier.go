@@ -41,7 +41,7 @@ func queryGetSinglePrivateEvent(ctx sdk.Context, path []string, k Keeper) (res [
 	event.EndTime = eventItself.EndTime
 	event.EventId = eventItself.EventId
 	event.Loser = eventItself.Loser
-	event.Winner = eventItself.Question
+	event.Winner = eventItself.Winner
 	event.Owner = eventItself.Owner
 
 	finalAnswer, err := k.GetFinalAnswer(ctx, id)

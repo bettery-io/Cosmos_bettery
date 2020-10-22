@@ -40,7 +40,6 @@ func ConnectToEvent(infuraKey string, bridgeAddress string) error {
 	if err != nil {
 		return errors.Errorf("error read contract abi: ", err)
 	}
-
 	fmt.Println("Connection success")
 
 	for {

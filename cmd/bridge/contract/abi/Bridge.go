@@ -20,7 +20,7 @@ var (
 	_ = big.NewInt
 	_ = strings.NewReader
 	_ = ethereum.NotFound
-	//	_ = abi.U256
+	_ = abi.U256
 	_ = bind.Bind
 	_ = common.Big1
 	_ = types.BloomLookup
@@ -28,10 +28,10 @@ var (
 )
 
 // StoreABI is the input ABI used to generate the binding from.
-const StoreABI = "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"Deposit\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[],\"name\":\"depositEth\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"depositedAccts\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}]"
+const StoreABI = "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"cosmos\",\"type\":\"string\"}],\"name\":\"Deposit\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"string\",\"name\":\"_cosmos\",\"type\":\"string\"}],\"name\":\"depositEth\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"depositedAccts\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}]"
 
 // StoreBin is the compiled bytecode used for deploying new contracts.
-var StoreBin = "0x608060405234801561001057600080fd5b5061031d806100206000396000f3fe6080604052600436106100295760003560e01c8063439370b11461002e5780637f5f723914610038575b600080fd5b6100366100b3565b005b34801561004457600080fd5b506100716004803603602081101561005b57600080fd5b810190808035906020019092919050505061027c565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6100bb6102b8565b6000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206040518060400160405290816000820160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001600182015481525050905033816000019073ffffffffffffffffffffffffffffffffffffffff16908173ffffffffffffffffffffffffffffffffffffffff16815250503481602001818152505060013390806001815401808255809150509060018203906000526020600020016000909192909190916101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550507fe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c3334604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019250505060405180910390a150565b6001818154811061028957fe5b906000526020600020016000915054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6040518060400160405280600073ffffffffffffffffffffffffffffffffffffffff16815260200160008152509056fea265627a7a7231582051d94b4879b1327a430bf76cd68633b59b0de3d21d7646645ec945a91e9df54664736f6c634300050d0032"
+var StoreBin = "0x608060405234801561001057600080fd5b506104ee806100206000396000f3fe6080604052600436106100295760003560e01c80637f5f72391461002e578063e049c84b146100a9575b600080fd5b34801561003a57600080fd5b506100676004803603602081101561005157600080fd5b8101908080359060200190929190505050610164565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b610162600480360360208110156100bf57600080fd5b81019080803590602001906401000000008111156100dc57600080fd5b8201836020820111156100ee57600080fd5b8035906020019184600183028401116401000000008311171561011057600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505091929192905050506101a0565b005b6001818154811061017157fe5b906000526020600020016000915054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6101a8610482565b6000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206040518060600160405290816000820160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200160018201548152602001600282018054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156102ea5780601f106102bf576101008083540402835291602001916102ea565b820191906000526020600020905b8154815290600101906020018083116102cd57829003601f168201915b505050505081525050905033816000019073ffffffffffffffffffffffffffffffffffffffff16908173ffffffffffffffffffffffffffffffffffffffff16815250503481602001818152505081816040018190525060013390806001815401808255809150509060018203906000526020600020016000909192909190916101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550507f643e927b32d5bfd08eccd2fcbd97057ad413850f857a2359639114e8e8dd3d7b333484604051808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200183815260200180602001828103825283818151815260200191508051906020019080838360005b83811015610442578082015181840152602081019050610427565b50505050905090810190601f16801561046f5780820380516001836020036101000a031916815260200191505b5094505050505060405180910390a15050565b6040518060600160405280600073ffffffffffffffffffffffffffffffffffffffff1681526020016000815260200160608152509056fea265627a7a723158200f26e3ca07860a50203a0c003d15da2b534e4bde497375ff0a67e152a5e2b4d164736f6c634300050d0032"
 
 // DeployStore deploys a new Ethereum contract, binding an instance of Store to it.
 func DeployStore(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *Store, error) {
@@ -215,25 +215,25 @@ func (_Store *StoreCallerSession) DepositedAccts(arg0 *big.Int) (common.Address,
 	return _Store.Contract.DepositedAccts(&_Store.CallOpts, arg0)
 }
 
-// DepositEth is a paid mutator transaction binding the contract method 0x439370b1.
+// DepositEth is a paid mutator transaction binding the contract method 0xe049c84b.
 //
-// Solidity: function depositEth() returns()
-func (_Store *StoreTransactor) DepositEth(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _Store.contract.Transact(opts, "depositEth")
+// Solidity: function depositEth(string _cosmos) returns()
+func (_Store *StoreTransactor) DepositEth(opts *bind.TransactOpts, _cosmos string) (*types.Transaction, error) {
+	return _Store.contract.Transact(opts, "depositEth", _cosmos)
 }
 
-// DepositEth is a paid mutator transaction binding the contract method 0x439370b1.
+// DepositEth is a paid mutator transaction binding the contract method 0xe049c84b.
 //
-// Solidity: function depositEth() returns()
-func (_Store *StoreSession) DepositEth() (*types.Transaction, error) {
-	return _Store.Contract.DepositEth(&_Store.TransactOpts)
+// Solidity: function depositEth(string _cosmos) returns()
+func (_Store *StoreSession) DepositEth(_cosmos string) (*types.Transaction, error) {
+	return _Store.Contract.DepositEth(&_Store.TransactOpts, _cosmos)
 }
 
-// DepositEth is a paid mutator transaction binding the contract method 0x439370b1.
+// DepositEth is a paid mutator transaction binding the contract method 0xe049c84b.
 //
-// Solidity: function depositEth() returns()
-func (_Store *StoreTransactorSession) DepositEth() (*types.Transaction, error) {
-	return _Store.Contract.DepositEth(&_Store.TransactOpts)
+// Solidity: function depositEth(string _cosmos) returns()
+func (_Store *StoreTransactorSession) DepositEth(_cosmos string) (*types.Transaction, error) {
+	return _Store.Contract.DepositEth(&_Store.TransactOpts, _cosmos)
 }
 
 // StoreDepositIterator is returned from FilterDeposit and is used to iterate over the raw logs and unpacked data for Deposit events raised by the Store contract.
@@ -307,12 +307,13 @@ func (it *StoreDepositIterator) Close() error {
 type StoreDeposit struct {
 	Sender common.Address
 	Amount *big.Int
+	Cosmos string
 	Raw    types.Log // Blockchain specific contextual infos
 }
 
-// FilterDeposit is a free log retrieval operation binding the contract event 0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c.
+// FilterDeposit is a free log retrieval operation binding the contract event 0x643e927b32d5bfd08eccd2fcbd97057ad413850f857a2359639114e8e8dd3d7b.
 //
-// Solidity: event Deposit(address sender, uint256 amount)
+// Solidity: event Deposit(address sender, uint256 amount, string cosmos)
 func (_Store *StoreFilterer) FilterDeposit(opts *bind.FilterOpts) (*StoreDepositIterator, error) {
 
 	logs, sub, err := _Store.contract.FilterLogs(opts, "Deposit")
@@ -322,9 +323,9 @@ func (_Store *StoreFilterer) FilterDeposit(opts *bind.FilterOpts) (*StoreDeposit
 	return &StoreDepositIterator{contract: _Store.contract, event: "Deposit", logs: logs, sub: sub}, nil
 }
 
-// WatchDeposit is a free log subscription operation binding the contract event 0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c.
+// WatchDeposit is a free log subscription operation binding the contract event 0x643e927b32d5bfd08eccd2fcbd97057ad413850f857a2359639114e8e8dd3d7b.
 //
-// Solidity: event Deposit(address sender, uint256 amount)
+// Solidity: event Deposit(address sender, uint256 amount, string cosmos)
 func (_Store *StoreFilterer) WatchDeposit(opts *bind.WatchOpts, sink chan<- *StoreDeposit) (event.Subscription, error) {
 
 	logs, sub, err := _Store.contract.WatchLogs(opts, "Deposit")
@@ -359,9 +360,9 @@ func (_Store *StoreFilterer) WatchDeposit(opts *bind.WatchOpts, sink chan<- *Sto
 	}), nil
 }
 
-// ParseDeposit is a log parse operation binding the contract event 0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c.
+// ParseDeposit is a log parse operation binding the contract event 0x643e927b32d5bfd08eccd2fcbd97057ad413850f857a2359639114e8e8dd3d7b.
 //
-// Solidity: event Deposit(address sender, uint256 amount)
+// Solidity: event Deposit(address sender, uint256 amount, string cosmos)
 func (_Store *StoreFilterer) ParseDeposit(log types.Log) (*StoreDeposit, error) {
 	event := new(StoreDeposit)
 	if err := _Store.contract.UnpackLog(event, "Deposit", log); err != nil {

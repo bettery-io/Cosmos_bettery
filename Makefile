@@ -19,8 +19,8 @@ clean:
 	rm -f bridge
 
 generateAbi:
-	solc --abi ./contracts/contracts/Bridge.sol -o ./cmd/bridge/contract/abi --overwrite
-	solc --bin ./contracts/contracts/Bridge.sol -o ./cmd/bridge/contract/abi --overwrite
+	solc --abi ../contracts/contracts/Bridge.sol -o ./cmd/bridge/contract/abi --overwrite
+	solc --bin ../contracts/contracts/Bridge.sol -o ./cmd/bridge/contract/abi --overwrite
 	abigen --bin=./cmd/bridge/contract/abi/Bridge.bin --abi=./cmd/bridge/contract/abi/Bridge.abi --pkg=store --out=./cmd/bridge/contract/abi/Bridge.go
 
 install: go.sum
