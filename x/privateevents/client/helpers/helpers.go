@@ -56,9 +56,25 @@ func getEvent(EventId int, w http.ResponseWriter, r *http.Request, cliCtx contex
 	return cliCtx.QueryWithData(fmt.Sprintf("custom/%s/%s/%s", types.QuerierRoute, types.QueryGetSinglePrivateEvent, eventId), nil)
 }
 
-func IndexOf(haystack []string, needle string) int {
-	for i, v := range haystack {
-		if v == needle {
+func CheckIfParticipantParticipate(partWallet string, EventId int, w http.ResponseWriter, r *http.Request, cliCtx context.CLIContext) bool {
+	res, _, err := getEvent(EventId, w, r, cliCtx)
+	if err != nil {
+		rest.WriteErrorResponse(w, http.StatusNotFound, "could not resolve event by id: "+strconv.FormatUint(uint64(EventId), 10)+" ,"+err.Error())
+	}
+	var event types.EventInfo
+	cliCtx.Codec.MustUnmarshalJSON(res, &event)
+	for _, v := range event.Participants {
+		if v.Participant.String() == partWallet {
+			return true
+		}
+	}
+
+	return false
+}
+
+func IndexOf(answers []string, answer string) int {
+	for i, v := range answers {
+		if v == answer {
 			return i
 		}
 	}

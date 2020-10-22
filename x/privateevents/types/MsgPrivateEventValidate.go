@@ -53,9 +53,6 @@ func (msg MsgPrivateEventValidate) ValidateBasic() error {
 	if msg.Date == 0 {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "date can't be empty")
 	}
-	if msg.AnswerNumber == 0 {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "answer number can't be empty")
-	}
 	if msg.Expert.Empty() {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "address expert can't be empty")
 	}

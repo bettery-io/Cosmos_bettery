@@ -53,9 +53,6 @@ func (msg MsgPrivateEventParticipate) ValidateBasic() error {
 	if msg.Date == 0 {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "date can't be empty")
 	}
-	if msg.AnswerNumber == 0 {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "answer number can't be empty")
-	}
 	if msg.Participant.Empty() {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "address participant can't be empty")
 	}
