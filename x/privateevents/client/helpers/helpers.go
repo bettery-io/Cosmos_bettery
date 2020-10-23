@@ -31,7 +31,7 @@ func CheckIfEventExist(EventId int, w http.ResponseWriter, r *http.Request, cliC
 	}
 }
 
-func AnswerIsKnown(EventId int, w http.ResponseWriter, r *http.Request, cliCtx context.CLIContext) bool {
+func ValidateExpert(EventId int, w http.ResponseWriter, r *http.Request, cliCtx context.CLIContext) bool {
 	res, _, err := getEvent(EventId, w, r, cliCtx)
 	if err != nil {
 		rest.WriteErrorResponse(w, http.StatusNotFound, "could not resolve event by id: "+strconv.FormatUint(uint64(EventId), 10)+" ,"+err.Error())
@@ -39,8 +39,16 @@ func AnswerIsKnown(EventId int, w http.ResponseWriter, r *http.Request, cliCtx c
 	var event types.EventInfo
 	cliCtx.Codec.MustUnmarshalJSON(res, &event)
 	if event.FinalAnswer == "undefined" {
-		return false
+		// check if time is valid
+		time := time.Now().Unix()
+		if uint(time) > event.EndTime {
+			return false
+		} else {
+			rest.WriteErrorResponse(w, http.StatusBadRequest, "Time for validator is not started")
+			return true
+		}
 	} else {
+		rest.WriteErrorResponse(w, http.StatusBadRequest, "Event is finish. Answer is alredy provided")
 		return true
 	}
 }
@@ -56,19 +64,28 @@ func getEvent(EventId int, w http.ResponseWriter, r *http.Request, cliCtx contex
 	return cliCtx.QueryWithData(fmt.Sprintf("custom/%s/%s/%s", types.QuerierRoute, types.QueryGetSinglePrivateEvent, eventId), nil)
 }
 
-func CheckIfParticipantParticipate(partWallet string, EventId int, w http.ResponseWriter, r *http.Request, cliCtx context.CLIContext) bool {
+func ValidateParticipant(partWallet string, EventId int, w http.ResponseWriter, r *http.Request, cliCtx context.CLIContext) bool {
 	res, _, err := getEvent(EventId, w, r, cliCtx)
 	if err != nil {
 		rest.WriteErrorResponse(w, http.StatusNotFound, "could not resolve event by id: "+strconv.FormatUint(uint64(EventId), 10)+" ,"+err.Error())
 	}
 	var event types.EventInfo
 	cliCtx.Codec.MustUnmarshalJSON(res, &event)
+
+	// check if participant already participate
 	for _, v := range event.Participants {
 		if v.Participant.String() == partWallet {
+			rest.WriteErrorResponse(w, http.StatusBadRequest, "Participant already participate")
 			return true
 		}
 	}
 
+	// check if time is valid
+	time := time.Now().Unix()
+	if uint(time) > event.EndTime {
+		rest.WriteErrorResponse(w, http.StatusBadRequest, "Time for paticipate is finish")
+		return true
+	}
 	return false
 }
 

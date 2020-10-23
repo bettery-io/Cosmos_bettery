@@ -84,9 +84,8 @@ func participatePrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
 			return
 		}
 
-		participantParticipate := helpers.CheckIfParticipantParticipate(req.BaseReq.From, req.EventId, w, r, cliCtx)
+		participantParticipate := helpers.ValidateParticipant(req.BaseReq.From, req.EventId, w, r, cliCtx)
 		if participantParticipate {
-			rest.WriteErrorResponse(w, http.StatusBadRequest, "Participant already participate")
 			return
 		}
 
@@ -134,9 +133,8 @@ func validatePrivateEvent(cliCtx context.CLIContext) http.HandlerFunc {
 			return
 		}
 
-		answerIsKnown := helpers.AnswerIsKnown(req.EventId, w, r, cliCtx)
+		answerIsKnown := helpers.ValidateExpert(req.EventId, w, r, cliCtx)
 		if answerIsKnown {
-			rest.WriteErrorResponse(w, http.StatusBadRequest, "Event is finish. Answer is alredy provided")
 			return
 		}
 
