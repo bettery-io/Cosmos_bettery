@@ -6,21 +6,23 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/spf13/cobra"
 
+	"github.com/VoroshilovMax/Bettery/x/publicevents/types"
 	abci "github.com/tendermint/tendermint/abci/types"
 
+	"github.com/VoroshilovMax/Bettery/x/publicevents/client/cli"
+	"github.com/VoroshilovMax/Bettery/x/publicevents/client/rest"
+	"github.com/VoroshilovMax/Bettery/x/publicevents/keeper"
 	"github.com/cosmos/cosmos-sdk/client/context"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/VoroshilovMax/Bettery/x/publicevents/client/cli"
-	"github.com/VoroshilovMax/Bettery/x/publicevents/client/rest"
-	"github.com/VoroshilovMax/Bettery/x/publicevents/keeper"
+	"github.com/cosmos/cosmos-sdk/x/bank"
 )
 
 // Type check to ensure the interface is properly implemented
 var (
-	_ module.AppModule           = AppModule{}
-	_ module.AppModuleBasic      = AppModuleBasic{}
+	_ module.AppModule      = AppModule{}
+	_ module.AppModuleBasic = AppModuleBasic{}
 )
 
 // AppModuleBasic defines the basic application module used by the publicevents module.
@@ -72,17 +74,16 @@ func (AppModuleBasic) GetQueryCmd(cdc *codec.Codec) *cobra.Command {
 // AppModule implements an application module for the publicevents module.
 type AppModule struct {
 	AppModuleBasic
-
-	keeper        keeper.Keeper
-	// TODO: Add keepers that your application depends on
+	keeper     Keeper
+	coinKeeper bank.Keeper
 }
 
 // NewAppModule creates a new AppModule object
-func NewAppModule(k keeper.Keeper, /*TODO: Add Keepers that your application depends on*/) AppModule {
+func NewAppModule(k keeper.Keeper, bankKeeper bank.Keeper) AppModule {
 	return AppModule{
-		AppModuleBasic:      AppModuleBasic{},
-		keeper:              k,
-		// TODO: Add keepers that your application depends on
+		AppModuleBasic: AppModuleBasic{},
+		keeper:         k,
+		coinKeeper:     bankKeeper,
 	}
 }
 
@@ -111,7 +112,7 @@ func (AppModule) QuerierRoute() string {
 
 // NewQuerierHandler returns the publicevents module sdk.Querier.
 func (am AppModule) NewQuerierHandler() sdk.Querier {
-	return types.NewQuerier(am.keeper)
+	return NewQuerier(am.keeper)
 }
 
 // InitGenesis performs genesis initialization for the publicevents module. It returns

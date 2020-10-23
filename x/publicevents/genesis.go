@@ -1,9 +1,8 @@
 package publicevents
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/VoroshilovMax/Bettery/x/publicevents/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // InitGenesis initialize default parameters

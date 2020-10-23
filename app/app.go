@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/VoroshilovMax/Bettery/x/privateevents"
+	"github.com/VoroshilovMax/Bettery/x/publicevents"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmos "github.com/tendermint/tendermint/libs/os"
@@ -51,6 +52,7 @@ var (
 		supply.AppModuleBasic{},
 
 		privateevents.AppModuleBasic{},
+		publicevents.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -98,6 +100,7 @@ type NewApp struct {
 	supplyKeeper       supply.Keeper
 	paramsKeeper       params.Keeper
 	privateEventKeeper privateevents.Keeper
+	publicEventKeeper  publicevents.Keeper
 
 	// Module Manager
 	mm *module.Manager
@@ -124,7 +127,7 @@ func NewInitApp(
 
 	keys := sdk.NewKVStoreKeys(bam.MainStoreKey, auth.StoreKey, staking.StoreKey,
 		supply.StoreKey, distr.StoreKey, slashing.StoreKey, params.StoreKey,
-		privateevents.StoreKey,
+		privateevents.StoreKey, publicevents.StoreKey,
 	)
 
 	tKeys := sdk.NewTransientStoreKeys(staking.TStoreKey, params.TStoreKey)
@@ -211,6 +214,12 @@ func NewInitApp(
 		app.bankKeeper,
 	)
 
+	app.publicEventKeeper = publicevents.NewKeeper(
+		app.cdc,
+		keys[publicevents.StoreKey],
+		app.bankKeeper,
+	)
+
 	// NOTE: Any module instantiated in the module manager that is later modified
 	// must be passed by reference here.
 	app.mm = module.NewManager(
@@ -221,6 +230,7 @@ func NewInitApp(
 		distr.NewAppModule(app.distrKeeper, app.accountKeeper, app.supplyKeeper, app.stakingKeeper),
 		slashing.NewAppModule(app.slashingKeeper, app.accountKeeper, app.stakingKeeper),
 		privateevents.NewAppModule(app.privateEventKeeper, app.bankKeeper),
+		publicevents.NewAppModule(app.publicEventKeeper, app.bankKeeper),
 		staking.NewAppModule(app.stakingKeeper, app.accountKeeper, app.supplyKeeper),
 		slashing.NewAppModule(app.slashingKeeper, app.accountKeeper, app.stakingKeeper),
 	)
@@ -241,6 +251,7 @@ func NewInitApp(
 		bank.ModuleName,
 		slashing.ModuleName,
 		privateevents.ModuleName,
+		publicevents.ModuleName,
 		supply.ModuleName,
 		genutil.ModuleName,
 	)
