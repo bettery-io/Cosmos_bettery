@@ -12,4 +12,5 @@ const (
 
 	// QuerierRoute to be used for querier msgs
 	QuerierRoute = ModuleName
+	EventPrefix  = "publicEvent-"
 )

@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/VoroshilovMax/Bettery/x/coinmaker"
 	"github.com/VoroshilovMax/Bettery/x/privateevents"
 	"github.com/VoroshilovMax/Bettery/x/publicevents"
 	abci "github.com/tendermint/tendermint/abci/types"
@@ -53,6 +54,7 @@ var (
 
 		privateevents.AppModuleBasic{},
 		publicevents.AppModuleBasic{},
+		coinmaker.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -101,6 +103,7 @@ type NewApp struct {
 	paramsKeeper       params.Keeper
 	privateEventKeeper privateevents.Keeper
 	publicEventKeeper  publicevents.Keeper
+	coinMakerKeeper    coinmaker.Keeper
 
 	// Module Manager
 	mm *module.Manager
@@ -127,7 +130,7 @@ func NewInitApp(
 
 	keys := sdk.NewKVStoreKeys(bam.MainStoreKey, auth.StoreKey, staking.StoreKey,
 		supply.StoreKey, distr.StoreKey, slashing.StoreKey, params.StoreKey,
-		privateevents.StoreKey, publicevents.StoreKey,
+		privateevents.StoreKey, publicevents.StoreKey, coinmaker.StoreKey,
 	)
 
 	tKeys := sdk.NewTransientStoreKeys(staking.TStoreKey, params.TStoreKey)
@@ -220,6 +223,12 @@ func NewInitApp(
 		app.bankKeeper,
 	)
 
+	app.coinMakerKeeper = coinmaker.NewKeeper(
+		app.cdc,
+		keys[publicevents.StoreKey],
+		app.bankKeeper,
+	)
+
 	// NOTE: Any module instantiated in the module manager that is later modified
 	// must be passed by reference here.
 	app.mm = module.NewManager(
@@ -231,6 +240,7 @@ func NewInitApp(
 		slashing.NewAppModule(app.slashingKeeper, app.accountKeeper, app.stakingKeeper),
 		privateevents.NewAppModule(app.privateEventKeeper, app.bankKeeper),
 		publicevents.NewAppModule(app.publicEventKeeper, app.bankKeeper),
+		coinmaker.NewAppModule(app.coinMakerKeeper, app.bankKeeper),
 		staking.NewAppModule(app.stakingKeeper, app.accountKeeper, app.supplyKeeper),
 		slashing.NewAppModule(app.slashingKeeper, app.accountKeeper, app.stakingKeeper),
 	)
@@ -252,6 +262,7 @@ func NewInitApp(
 		slashing.ModuleName,
 		privateevents.ModuleName,
 		publicevents.ModuleName,
+		coinmaker.ModuleName,
 		supply.ModuleName,
 		genutil.ModuleName,
 	)

@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/tendermint/tendermint/libs/log"
 
@@ -30,4 +31,12 @@ func NewKeeper(cdc *codec.Codec, storeKey sdk.StoreKey, coinKeeper bank.Keeper) 
 // Logger returns a module-specific logger.
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
+}
+
+func (k Keeper) SetPublicEvent(ctx sdk.Context, event types.CreateEvent) {
+	eventId := event.EventId
+	store := ctx.KVStore(k.storeKey)
+	bz := k.cdc.MustMarshalBinaryLengthPrefixed(event)
+	key := []byte(types.EventPrefix + strconv.Itoa(eventId))
+	store.Set([]byte(key), bz)
 }
