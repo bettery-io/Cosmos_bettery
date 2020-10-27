@@ -22,6 +22,7 @@ var (
 	NewGenesisState     = types.NewGenesisState
 	DefaultGenesisState = types.DefaultGenesisState
 	ValidateGenesis     = types.ValidateGenesis
+	NewMsgCreateCoin    = types.NewMsgCreateCoin
 
 	// variable aliases
 	ModuleCdc = types.ModuleCdc
@@ -31,4 +32,6 @@ type (
 	Keeper       = keeper.Keeper
 	GenesisState = types.GenesisState
 	Params       = types.Params
+
+	MsgCreateCoin = types.MsgCreateCoin
 )
