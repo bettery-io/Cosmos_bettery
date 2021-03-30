@@ -1,23 +1,29 @@
 package main
 
 import (
+	"bufio"
 	"log"
 	"os"
 	"strings"
 
 	"github.com/VoroshilovMax/Bettery/app"
 	contract "github.com/VoroshilovMax/Bettery/cmd/bridge/contract"
+	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/rpc"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"github.com/tendermint/tendermint/libs/cli"
 )
 
 var cdc *codec.Codec
 
-const EnvPrefix = "BRIDGE"
+const (
+	EnvPrefix  = "BRIDGE"
+	FlagRPCURL = "rpc-url"
+)
 
 func init() {
 
@@ -29,6 +35,15 @@ func init() {
 	config.Seal()
 
 	cdc = app.MakeCodec()
+
+	// Add --chain-id to persistent flags and mark it required
+	rootCmd.PersistentFlags().String(flags.FlagKeyringBackend, flags.DefaultKeyringBackend,
+		"Select keyring's backend (os|file|test)")
+	rootCmd.PersistentFlags().String(flags.FlagChainID, "", "Chain ID of tendermint node")
+	rootCmd.PersistentFlags().String(FlagRPCURL, "", "RPC URL of tendermint node")
+	rootCmd.PersistentPreRunE = func(_ *cobra.Command, _ []string) error {
+		return initConfig(rootCmd)
+	}
 
 	// Construct Root Command
 	rootCmd.AddCommand(
@@ -45,7 +60,7 @@ func init() {
 }
 
 var rootCmd = &cobra.Command{
-	Use:          "ebrelayer",
+	Use:          "bridge",
 	Short:        "Streams live events from Ethereum and Cosmos and relays event information to the opposite chain",
 	SilenceUsage: true,
 }
@@ -75,8 +90,14 @@ func RunInitBridgeCmdCmd(cmd *cobra.Command, args []string) error {
 	}
 	bridgeAddress := args[1]
 
-	contract.ConnectToEvent(infuraKey, bridgeAddress)
+	inBuf := bufio.NewReader(cmd.InOrStdin())
+
+	contract.ConnectToEvent(infuraKey, bridgeAddress, cdc, inBuf)
 	return nil
+}
+
+func initConfig(cmd *cobra.Command) error {
+	return viper.BindPFlag(flags.FlagChainID, cmd.PersistentFlags().Lookup(flags.FlagChainID))
 }
 
 func main() {

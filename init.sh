@@ -2,7 +2,7 @@
 rm -r ~/.betterycli
 rm -r ~/.betteryd
 
-betteryd init mynode --chain-id bettery
+betteryd init local --chain-id=bettery
 
 betterycli config keyring-backend test
 betterycli config chain-id bettery

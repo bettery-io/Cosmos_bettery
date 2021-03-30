@@ -24,9 +24,9 @@ generateAbi:
 	abigen --bin=./cmd/bridge/contract/abi/Bridge.bin --abi=./cmd/bridge/contract/abi/Bridge.abi --pkg=store --out=./cmd/bridge/contract/abi/Bridge.go
 
 install: go.sum
-		go install -mod=readonly $(BUILD_FLAGS) ./cmd/betteryd
-		go install -mod=readonly $(BUILD_FLAGS) ./cmd/betterycli
-		go install -mod=readonly $(BUILD_FLAGS) ./cmd/bridge
+		go install $(BUILD_FLAGS) ./cmd/betteryd
+		go install $(BUILD_FLAGS) ./cmd/betterycli
+		go install $(BUILD_FLAGS) ./cmd/bridge
 
 go.sum: go.mod
 		@echo "--> Ensure dependencies have not been modified"

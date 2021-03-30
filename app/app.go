@@ -226,6 +226,7 @@ func NewInitApp(
 	app.coinMakerKeeper = coinmaker.NewKeeper(
 		app.cdc,
 		keys[publicevents.StoreKey],
+		app.supplyKeeper,
 		app.bankKeeper,
 	)
 

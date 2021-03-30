@@ -1,0 +1,60 @@
+rm: /Users/macbook/.betterycli: No such file or directory
+rm: /Users/macbook/.betteryd: No such file or directory
+{"app_message":{"auth":{"accounts":[],"params":{"max_memo_characters":"256","sig_verify_cost_ed25519":"590","sig_verify_cost_secp256k1":"1000","tx_sig_limit":"7","tx_size_cost_per_byte":"10"}},"bank":{"send_enabled":true},"coinmaker":{},"distribution":{"delegator_starting_infos":[],"delegator_withdraw_infos":[],"fee_pool":{"community_pool":[]},"outstanding_rewards":[],"params":{"base_proposer_reward":"0.010000000000000000","bonus_proposer_reward":"0.040000000000000000","community_tax":"0.020000000000000000","withdraw_addr_enabled":true},"previous_proposer":"","validator_accumulated_commissions":[],"validator_current_rewards":[],"validator_historical_rewards":[],"validator_slash_events":[]},"genutil":{"gentxs":[]},"params":null,"privateevents":{},"publicevents":{},"slashing":{"missed_blocks":{},"params":{"downtime_jail_duration":"600000000000","min_signed_per_window":"0.500000000000000000","signed_blocks_window":"100","slash_fraction_double_sign":"0.050000000000000000","slash_fraction_downtime":"0.010000000000000000"},"signing_infos":{}},"staking":{"delegations":null,"exported":false,"last_total_power":"0","last_validator_powers":null,"params":{"bond_denom":"stake","historical_entries":0,"max_entries":7,"max_validators":100,"unbonding_time":"1814400000000000"},"redelegations":null,"unbonding_delegations":null,"validators":null},"supply":{"supply":[]}},"chain_id":"bettery","gentxs_dir":"","moniker":"local","node_id":"c02b640309c09d375d756d938f81b8ee03ad063a"}
+/Users/macbook/.betterycli/config/config.toml does not exist
+configuration saved to /Users/macbook/.betterycli/config/config.toml
+configuration saved to /Users/macbook/.betterycli/config/config.toml
+configuration saved to /Users/macbook/.betterycli/config/config.toml
+configuration saved to /Users/macbook/.betterycli/config/config.toml
+configuration saved to /Users/macbook/.betterycli/config/config.toml
+{
+  "name": "validator",
+  "type": "local",
+  "address": "cosmos1xwlvmc4nq4d9tdst69m5ymef67tlpad23he3kx",
+  "pubkey": "cosmospub1addwnpepqwkvppul590swd0hrs3syjmgq9ugq0gctt0k3t63tyda377v59885k2fktd",
+  "mnemonic": "hover open kind fashion couch glory order coil device stomach cat liar off join describe estate section wedding vault walnut position column long subway"
+}
+{
+  "name": "me",
+  "type": "local",
+  "address": "cosmos1n2k4ck59s7mawgcfukqyn4ts3sckt3qv3sg5ee",
+  "pubkey": "cosmospub1addwnpepqfzphppf3xpww5rn46xten0yvpkmj7xappddqn7glnrk94jzyj0uv0knwac",
+  "mnemonic": "resemble vacuum debris own angry tag between tragic open jealous dish pause spring track knee ghost pupil mesh fetch rescue business lend erode proof"
+}
+{
+  "name": "you",
+  "type": "local",
+  "address": "cosmos1pcuhxthetd7t82asrw2eyprkfjw9uqp7d4tdkc",
+  "pubkey": "cosmospub1addwnpepqt72xhvaf7nenawgl5vykxm6m47zpwtw96cn5yr9jj70svmuxdrhc2q4kqd",
+  "mnemonic": "father swap order thrive step that review art appear similar edge motor zero cream alley under rhythm history acquire tone horn dwarf spoon number"
+}
+{
+  "name": "she",
+  "type": "local",
+  "address": "cosmos143g8jlvdyl0axtqrc9g0cx7na6xl6ul7k2ndrh",
+  "pubkey": "cosmospub1addwnpepqwdfjdd4sxgdmjgane0gx0y5wt64slfm75xx3v6qqykexe37delxzznw2qv",
+  "mnemonic": "buzz lock neglect situate surge clay hurdle hub more clean wall brick term bus bracket monitor front monitor sound deposit phone erase network sound"
+}
+{
+  "name": "he",
+  "type": "local",
+  "address": "cosmos14r6fmmj0wuy4d84c4fryk0qd37jk7z6zs6pstu",
+  "pubkey": "cosmospub1addwnpepqtw9tr9gta6jvdzqca08pkgqj278wm5u9tzzk54syudqqskj2yepue3vvq9",
+  "mnemonic": "there antique gasp heart degree flee road maple nerve luggage end fossil elephant initial wrestle picnic slim secret theme truly cherry turkey puzzle science"
+}
+{
+  "name": "we",
+  "type": "local",
+  "address": "cosmos16krdqkljmaf76r4hwy6kvr6sjf3f5gwrh86r3q",
+  "pubkey": "cosmospub1addwnpepq09fmlujlwvylwkj44znv5mcpnkgs5p6lx27hrdl5tmra9uat5qdqgqjnle",
+  "mnemonic": "match safe nest gallery salt photo smoke heart promote cherry sudden solution toward thing honey light split insect patient avoid adjust proof chat poet"
+}
+{
+  "name": "they",
+  "type": "local",
+  "address": "cosmos1gtu7hj4y5684z3gw9krmfskqfu4xv6tzjjvrn0",
+  "pubkey": "cosmospub1addwnpepq2sn85crt7huefxwdeynmugcg3jx9fkwsfptmg40gaekew8shwupvv3skml",
+  "mnemonic": "cloth pipe coral zebra mule hollow purpose hammer design antique math sponsor pigeon loop depart butter media amateur unveil explain parrot whip trouble three"
+}
+Genesis transaction written to "/Users/macbook/.betteryd/config/gentx/gentx-c02b640309c09d375d756d938f81b8ee03ad063a.json"
+{"app_message":{"auth":{"accounts":[{"type":"cosmos-sdk/Account","value":{"account_number":0,"address":"cosmos1xwlvmc4nq4d9tdst69m5ymef67tlpad23he3kx","coins":[{"amount":"10000000000000000000000000000000000000000000000000000000000000000000000000000","denom":"bet"},{"amount":"1000000000","denom":"stake"}],"public_key":"","sequence":0}},{"type":"cosmos-sdk/Account","value":{"account_number":0,"address":"cosmos1n2k4ck59s7mawgcfukqyn4ts3sckt3qv3sg5ee","coins":[{"amount":"10000000000000000000","denom":"bet"}],"public_key":"","sequence":0}},{"type":"cosmos-sdk/Account","value":{"account_number":0,"address":"cosmos1pcuhxthetd7t82asrw2eyprkfjw9uqp7d4tdkc","coins":[{"amount":"10000000000000000000","denom":"bet"}],"public_key":"","sequence":0}},{"type":"cosmos-sdk/Account","value":{"account_number":0,"address":"cosmos143g8jlvdyl0axtqrc9g0cx7na6xl6ul7k2ndrh","coins":[{"amount":"10000000000000000000","denom":"bet"}],"public_key":"","sequence":0}},{"type":"cosmos-sdk/Account","value":{"account_number":0,"address":"cosmos14r6fmmj0wuy4d84c4fryk0qd37jk7z6zs6pstu","coins":[{"amount":"10000000000000000000","denom":"bet"}],"public_key":"","sequence":0}},{"type":"cosmos-sdk/Account","value":{"account_number":0,"address":"cosmos16krdqkljmaf76r4hwy6kvr6sjf3f5gwrh86r3q","coins":[{"amount":"10000000000000000000","denom":"bet"}],"public_key":"","sequence":0}},{"type":"cosmos-sdk/Account","value":{"account_number":0,"address":"cosmos1gtu7hj4y5684z3gw9krmfskqfu4xv6tzjjvrn0","coins":[{"amount":"10000000000000000000","denom":"bet"}],"public_key":"","sequence":0}}],"params":{"max_memo_characters":"256","sig_verify_cost_ed25519":"590","sig_verify_cost_secp256k1":"1000","tx_sig_limit":"7","tx_size_cost_per_byte":"10"}},"bank":{"send_enabled":true},"coinmaker":{},"distribution":{"delegator_starting_infos":[],"delegator_withdraw_infos":[],"fee_pool":{"community_pool":[]},"outstanding_rewards":[],"params":{"base_proposer_reward":"0.010000000000000000","bonus_proposer_reward":"0.040000000000000000","community_tax":"0.020000000000000000","withdraw_addr_enabled":true},"previous_proposer":"","validator_accumulated_commissions":[],"validator_current_rewards":[],"validator_historical_rewards":[],"validator_slash_events":[]},"genutil":{"gentxs":[{"type":"cosmos-sdk/StdTx","value":{"fee":{"amount":[],"gas":"200000"},"memo":"c02b640309c09d375d756d938f81b8ee03ad063a@192.168.0.104:26656","msg":[{"type":"cosmos-sdk/MsgCreateValidator","value":{"commission":{"max_change_rate":"0.010000000000000000","max_rate":"0.200000000000000000","rate":"0.100000000000000000"},"delegator_address":"cosmos1xwlvmc4nq4d9tdst69m5ymef67tlpad23he3kx","description":{"details":"","identity":"","moniker":"local","security_contact":"","website":""},"min_self_delegation":"1","pubkey":"cosmosvalconspub1zcjduepqwv0l8zj2jrslvzg3te4dvnyq43wwpwwnnaw0t5h58qrl503aejxql00vdn","validator_address":"cosmosvaloper1xwlvmc4nq4d9tdst69m5ymef67tlpad25rdy64","value":{"amount":"100000000","denom":"stake"}}}],"signatures":[{"pub_key":{"type":"tendermint/PubKeySecp256k1","value":"A6zAh5+hXwc19xwjAktoAXiAPRha32ivUVkb2PvMoU56"},"signature":"vo+4Ce/rmJKjBOYO+bPsPu4l+CI4jPwgSi1ReP7Om/4FFcdnk7gxoGXTy9ON1K/oKMN7MDFImQ+YQU0HFxfp1Q=="}]}}]},"params":null,"privateevents":{},"publicevents":{},"slashing":{"missed_blocks":{},"params":{"downtime_jail_duration":"600000000000","min_signed_per_window":"0.500000000000000000","signed_blocks_window":"100","slash_fraction_double_sign":"0.050000000000000000","slash_fraction_downtime":"0.010000000000000000"},"signing_infos":{}},"staking":{"delegations":null,"exported":false,"last_total_power":"0","last_validator_powers":null,"params":{"bond_denom":"stake","historical_entries":0,"max_entries":7,"max_validators":100,"unbonding_time":"1814400000000000"},"redelegations":null,"unbonding_delegations":null,"validators":null},"supply":{"supply":[]}},"chain_id":"bettery","gentxs_dir":"/Users/macbook/.betteryd/config/gentx","moniker":"local","node_id":"c02b640309c09d375d756d938f81b8ee03ad063a"}
